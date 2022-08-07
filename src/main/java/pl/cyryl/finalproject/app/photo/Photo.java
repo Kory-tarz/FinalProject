@@ -17,5 +17,5 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String path;
-    private boolean isMainPhoto;
+    private boolean isMainPhoto = false;
 }
