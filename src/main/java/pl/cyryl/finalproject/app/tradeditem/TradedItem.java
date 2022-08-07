@@ -1,21 +1,23 @@
-package pl.cyryl.finalproject.app.item;
+package pl.cyryl.finalproject.app.tradeditem;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.cyryl.finalproject.app.category.Category;
+import pl.cyryl.finalproject.app.item.Item;
 import pl.cyryl.finalproject.app.photo.Photo;
 import pl.cyryl.finalproject.users.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
 @Entity
-public class Item {
+public class TradedItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -25,11 +27,13 @@ public class Item {
     private String name;
     @NotEmpty
     private String description;
-    private String expectations;
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Category category;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Photo> photos;
-    @NotNull
-    public boolean isPublic;
+
+    public TradedItem(Item item){
+        this.owner = item.getOwner();
+        this.name = item.getName();
+        this.description = item.getDescription();
+        this.photos = item.getPhotos();
+    }
 }
