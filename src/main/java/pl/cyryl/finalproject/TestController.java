@@ -36,7 +36,14 @@ public class TestController {
     @GetMapping("/")
     @ResponseBody
     public String start(HttpSession session){
-        session.setAttribute("userId", 1);
+        session.setAttribute("userId", 1L);
+        return loc;
+    }
+
+    @GetMapping("/other")
+    @ResponseBody
+    public String otherUser(HttpSession session){
+        session.setAttribute("userId", 2L);
         return loc;
     }
 

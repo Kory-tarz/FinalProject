@@ -35,4 +35,16 @@ public class Item {
     @NotNull
     public boolean active = true;
 
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Item)){
+            return false;
+        }
+        return this.id == ((Item) obj).getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(id).hashCode();
+    }
 }

@@ -10,6 +10,7 @@ import pl.cyryl.finalproject.users.user.User;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -24,7 +25,7 @@ public class Offer {
     @ManyToOne
     private User receivingUser;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Item> submittedItems;
+    private Set<Item> submittedItems = new HashSet<>();
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Item> offeredItems;
     @ManyToOne
