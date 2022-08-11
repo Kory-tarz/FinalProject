@@ -6,7 +6,7 @@
     <title>Registration</title>
 </head>
 <body>
-<h1>Registration</h1>
+<h1>Rejestracja</h1>
 <div>
     <c:if test="${error_msg != null}">
         <label style="color: red">${error_msg}</label>
@@ -16,7 +16,7 @@
     <div>
         <label>Profile picture</label>
         <c:forEach items="${profile_pictures}" var="picture">
-            <img src="${pictureDir}${picture.imagePath}">
+            <img src="${pictureDir}${picture.imagePath}" alt="${picture.path}" width="50" height="50"/>
             <form:radiobutton path="profilePhotoFile" value="${picture}"/>
         </c:forEach>
 

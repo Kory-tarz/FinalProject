@@ -32,5 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### User ###
+### Photos ###
 /user-photos/
+/profile-pictures/

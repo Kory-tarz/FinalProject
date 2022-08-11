@@ -3,7 +3,6 @@ package pl.cyryl.finalproject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,13 +56,10 @@ public class TestController {
 
     @PostMapping("/add")
     public String savePhoto(@RequestParam("image") MultipartFile multipartFile, Model model) throws IOException {
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        ItemPhoto photo = new ItemPhoto();
-        photo.setPath(fileName);
-
+        ItemPhoto photo = filesUtil.getPhotoWithPath(new ItemPhoto(), multipartFile);
         photo = itemPhotoRepository.save(photo);
-        String uploadDir = filesUtil.getItemPhotosDirectory() + photo.getId();
-        filesUtil.saveFile(uploadDir, fileName, multipartFile);
+        filesUtil.saveItemPhoto(photo, multipartFile);
+
         model.addAttribute("photo", photo);
         model.addAttribute("photoDir", filesUtil.getItemPhotosDirectory());
         return "/item/display";
@@ -76,13 +72,11 @@ public class TestController {
 
     @PostMapping("/addp")
     public String saveProfile(@RequestParam("image") MultipartFile multipartFile, Model model) throws IOException {
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        ProfilePicture profilePicture = new ProfilePicture();
-        profilePicture.setPath(fileName);
+        ProfilePicture profilePicture = filesUtil.getPhotoWithPath(new ProfilePicture(), multipartFile);
         profilePicture.setPublicPicture(true);
         profilePicture = profilePictureRepository.save(profilePicture);
-        String uploadDir = filesUtil.getProfilePicturesDirectory() + profilePicture.getId();
-        filesUtil.saveFile(uploadDir, fileName, multipartFile);
+        filesUtil.saveProfilePicture(profilePicture , multipartFile);
+
         model.addAttribute("photo", profilePicture);
         model.addAttribute("photoDir", filesUtil.getProfilePicturesDirectory());
         return "/item/display";

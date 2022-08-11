@@ -12,23 +12,20 @@ import java.nio.file.Paths;
 public class MvcConfig implements WebMvcConfigurer {
 
     @Value("${app.user.item-images.location}")
-    String dirName;
+    String itemPhotoDir;
+    @Value("${app.user.profile-pictures.location}")
+    String profilePictureDir;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(imagePathHandler(dirName))
-                .addResourceLocations(fileLocation(dirName))
+        registry.addResourceHandler(imagePathHandler(itemPhotoDir))
+                .addResourceLocations(fileLocation(itemPhotoDir))
+                .setCachePeriod(0);
+
+        registry.addResourceHandler(imagePathHandler(profilePictureDir))
+                .addResourceLocations(fileLocation(profilePictureDir))
                 .setCachePeriod(0);
     }
-
-//    private void exposeDirectory(String dirName, ResourceHandlerRegistry registry) {
-//        Path uploadDir = Paths.get(dirName);
-//        String uploadPath = uploadDir.toFile().getAbsolutePath();
-//
-//        if (dirName.startsWith("../")) dirName = dirName.replace("../", "");
-//
-//        registry.addResourceHandler("/" + dirName + "/**").addResourceLocations("file:/"+ uploadPath + "/");
-//    }
 
     private String imagePathHandler(String dirName){
         if (dirName.startsWith("../")){

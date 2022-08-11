@@ -5,7 +5,8 @@
 </head>
 <body>
 <h1>NOTHING HERE ATM</h1>
-<h2> src="${photo.imagePath}"</h2>
+<h2> src="${photoDir}${photo.imagePath}"</h2>
 <img src="${photoDir}${photo.imagePath}">
+<img src="user-photos/2/Korytarz.jpeg">
 </body>
 </html>

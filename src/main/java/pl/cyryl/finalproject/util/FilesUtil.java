@@ -1,7 +1,9 @@
 package pl.cyryl.finalproject.util;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import pl.cyryl.finalproject.app.photo.Photo;
 
 import java.io.*;
 import java.nio.file.*;
@@ -15,17 +17,30 @@ public class FilesUtil {
 
 
     public String getProfilePicturesDirectory(){
-        return profilePicturesLocation + "/";
+        return "/" + profilePicturesLocation + "/";
     }
 
     public String getItemPhotosDirectory(){
-        return itemPhotosLocation + "/";
+        return "/" + itemPhotosLocation + "/";
+    }
+
+    public <T extends Photo> T getPhotoWithPath(T photo, MultipartFile multipartFile){
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        photo.setPath(fileName);
+        return photo;
+    }
+
+    public void saveProfilePicture(Photo photo, MultipartFile multipartFile) throws IOException {
+        saveFile(profilePicturesLocation + "/" + photo.getId(), photo.getPath(), multipartFile);
+    }
+
+    public void saveItemPhoto(Photo photo, MultipartFile multipartFile) throws IOException {
+        saveFile(itemPhotosLocation + "/" + photo.getId(), photo.getPath(), multipartFile);
     }
 
     public void saveFile(String uploadDir, String fileName,
                                 MultipartFile multipartFile) throws IOException {
         Path uploadPath = Paths.get(uploadDir);
-        System.out.println(uploadPath);
 
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
