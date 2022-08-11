@@ -1,8 +1,11 @@
 package pl.cyryl.finalproject.users.user;
 
-import pl.cyryl.finalproject.users.user.User;
+import pl.cyryl.finalproject.users.user.exception.EmailAlreadyRegisteredException;
+
+import java.util.Optional;
 
 public interface UserService {
-    User findByUserName(String name);
-    void saveUser(User user);
+    Optional<User> findByUserName(String name);
+    Optional<User> findById(Long id);
+    void registerNewUser(User user) throws EmailAlreadyRegisteredException;
 }

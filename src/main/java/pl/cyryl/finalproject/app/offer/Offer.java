@@ -8,6 +8,7 @@ import pl.cyryl.finalproject.app.transaction.TransactionType;
 import pl.cyryl.finalproject.users.user.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -27,8 +28,11 @@ public class Offer {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Item> offeredItems;
     @ManyToOne
-    private TransactionType exchangeType;
+    private TransactionType transactionType;
     private LocalDateTime lastUpdated;
+    @ManyToOne
+    @NotNull
+    private Status status;
 
     @PrePersist
     private void onSave(){

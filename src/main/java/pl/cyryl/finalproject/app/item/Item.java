@@ -4,7 +4,7 @@ package pl.cyryl.finalproject.app.item;
 import lombok.Getter;
 import lombok.Setter;
 import pl.cyryl.finalproject.app.category.Category;
-import pl.cyryl.finalproject.app.photo.Photo;
+import pl.cyryl.finalproject.app.photo.ItemPhoto;
 import pl.cyryl.finalproject.users.user.User;
 
 import javax.persistence.*;
@@ -29,7 +29,10 @@ public class Item {
     @ManyToOne(cascade = CascadeType.ALL)
     private Category category;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Photo> photos;
+    private List<ItemPhoto> itemPhotos;
     @NotNull
     public boolean isPublic;
+    @NotNull
+    public boolean isActive;
+
 }

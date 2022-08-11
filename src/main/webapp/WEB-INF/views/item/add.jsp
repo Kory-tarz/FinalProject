@@ -4,7 +4,7 @@
     <title>Title</title>
 </head>
 <body>
-<form method="post" action="/add" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data">
     <label>Photos: </label>
     <input type="file" name="image" accept="image/png, image/jpeg" />
     <button type="submit" value="Save">Save</button>

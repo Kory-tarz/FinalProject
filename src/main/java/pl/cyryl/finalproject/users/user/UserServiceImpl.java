@@ -4,12 +4,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.cyryl.finalproject.users.role.Role;
 import pl.cyryl.finalproject.users.role.RoleRepository;
-import pl.cyryl.finalproject.users.user.User;
-import pl.cyryl.finalproject.users.user.UserRepository;
-import pl.cyryl.finalproject.users.user.UserService;
+import pl.cyryl.finalproject.users.user.exception.EmailAlreadyRegisteredException;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,15 +25,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUserName(String username) {
+    public Optional<User> findByUserName(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
-    public void saveUser(User user) {
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public void registerNewUser(User user) throws EmailAlreadyRegisteredException {
+        if(emailExist(user.getEmail())){
+            throw new EmailAlreadyRegisteredException("There is already an account with email address: " + user.getEmail());
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role userRole = roleRepository.findByName("ROLE_USER");
         user.setRoles(new HashSet<>(Arrays.asList(userRole)));
         userRepository.save(user);
+    }
+
+    private boolean emailExist(String email){
+        return userRepository.findByEmail(email).isPresent();
     }
 }

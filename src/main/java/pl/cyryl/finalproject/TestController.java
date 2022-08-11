@@ -1,31 +1,42 @@
 package pl.cyryl.finalproject;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import pl.cyryl.finalproject.app.photo.Photo;
-import pl.cyryl.finalproject.app.photo.PhotoRepository;
-import pl.cyryl.finalproject.util.FileUploadUtil;
+import pl.cyryl.finalproject.app.photo.ItemPhoto;
+import pl.cyryl.finalproject.app.photo.ItemPhotoRepository;
+import pl.cyryl.finalproject.app.photo.ProfilePicture;
+import pl.cyryl.finalproject.app.photo.ProfilePictureRepository;
+import pl.cyryl.finalproject.util.FilesUtil;
 
 import java.io.IOException;
 
 @Controller
 public class TestController {
 
-    private final PhotoRepository photoRepository;
+    private final ItemPhotoRepository itemPhotoRepository;
+    private final ProfilePictureRepository profilePictureRepository;
+    private final FilesUtil filesUtil;
 
-    public TestController(PhotoRepository photoRepository) {
-        this.photoRepository = photoRepository;
+    public TestController(ItemPhotoRepository itemPhotoRepository, ProfilePictureRepository profilePictureRepository, FilesUtil filesUtil) {
+        this.itemPhotoRepository = itemPhotoRepository;
+        this.profilePictureRepository = profilePictureRepository;
+        this.filesUtil = filesUtil;
     }
+
+    @Value("${app.user.item-images.location}")
+    private String loc;
 
     @GetMapping("/")
     @ResponseBody
     public String start(){
-        return "all good";
+        return loc;
     }
 
     @GetMapping("/admin/")
@@ -45,21 +56,41 @@ public class TestController {
     }
 
     @PostMapping("/add")
-    public String savePhoto(@RequestParam("image") MultipartFile multipartFile) throws IOException {
+    public String savePhoto(@RequestParam("image") MultipartFile multipartFile, Model model) throws IOException {
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        Photo photo = new Photo();
+        ItemPhoto photo = new ItemPhoto();
         photo.setPath(fileName);
 
-        photo = photoRepository.save(photo);
-        String uploadDir = "user-photos/" + photo.getId();
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-        System.out.println("Hi there");
-        return "redirect:/display";
-    }
-
-    @GetMapping("/display")
-    public String showPhoto(){
+        photo = itemPhotoRepository.save(photo);
+        String uploadDir = filesUtil.getItemPhotosDirectory() + photo.getId();
+        filesUtil.saveFile(uploadDir, fileName, multipartFile);
+        model.addAttribute("photo", photo);
+        model.addAttribute("photoDir", filesUtil.getItemPhotosDirectory());
         return "/item/display";
     }
+
+    @GetMapping("/addp")
+    public String addProfile(){
+        return "/item/add";
+    }
+
+    @PostMapping("/addp")
+    public String saveProfile(@RequestParam("image") MultipartFile multipartFile, Model model) throws IOException {
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        ProfilePicture profilePicture = new ProfilePicture();
+        profilePicture.setPath(fileName);
+        profilePicture.setPublicPicture(true);
+        profilePicture = profilePictureRepository.save(profilePicture);
+        String uploadDir = filesUtil.getProfilePicturesDirectory() + profilePicture.getId();
+        filesUtil.saveFile(uploadDir, fileName, multipartFile);
+        model.addAttribute("photo", profilePicture);
+        model.addAttribute("photoDir", filesUtil.getProfilePicturesDirectory());
+        return "/item/display";
+    }
+
+//    @GetMapping("/display")
+//    public String showPhoto(){
+//        return "/item/display";
+//    }
 
 }
