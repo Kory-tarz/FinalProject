@@ -31,8 +31,8 @@ public class Item {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ItemPhoto> itemPhotos;
     @NotNull
-    public boolean isPublic;
+    public boolean publicVisibility;
     @NotNull
-    public boolean isActive;
+    public boolean active;
 
 }
