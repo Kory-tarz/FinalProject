@@ -14,6 +14,7 @@ import pl.cyryl.finalproject.app.photo.ProfilePicture;
 import pl.cyryl.finalproject.app.photo.ProfilePictureRepository;
 import pl.cyryl.finalproject.util.FilesUtil;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Controller
@@ -34,7 +35,8 @@ public class TestController {
 
     @GetMapping("/")
     @ResponseBody
-    public String start(){
+    public String start(HttpSession session){
+        session.setAttribute("userId", 1);
         return loc;
     }
 
@@ -51,7 +53,7 @@ public class TestController {
 
     @GetMapping("/add")
     public String addPhoto(){
-        return "/item/add";
+        return "/add";
     }
 
     @PostMapping("/add")
@@ -67,7 +69,7 @@ public class TestController {
 
     @GetMapping("/addp")
     public String addProfile(){
-        return "/item/add";
+        return "/add";
     }
 
     @PostMapping("/addp")
