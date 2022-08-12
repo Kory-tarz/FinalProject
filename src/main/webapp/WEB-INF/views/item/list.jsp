@@ -15,5 +15,6 @@
         </li>
     </c:forEach>
 </ul>
+<p><a href="<c:url value="/item/add/"/>"> Dodaj swój przedmiot </a></p>
 </body>
 </html>

@@ -19,4 +19,11 @@ public class Status {
     private long id;
     private String name;
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Status){
+            return ((Status) obj).name.equals(this.name);
+        }
+        return false;
+    }
 }

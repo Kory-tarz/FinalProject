@@ -28,6 +28,12 @@
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
     </div>
+    <div>
+        <form action="<c:url value="/offer/cancel"/>" method="post">
+            <button type="submit">Anuluj</button>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
+    </div>
 </div>
 </body>
 </html>

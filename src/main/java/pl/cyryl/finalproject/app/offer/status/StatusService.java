@@ -17,4 +17,8 @@ public class StatusService {
     public Status getStatus(String statusName){
         return statusRepository.findByName(statusName);
     }
+
+    public Status getAcceptedStatus(){
+        return statusRepository.findByName("accepted");
+    }
 }
