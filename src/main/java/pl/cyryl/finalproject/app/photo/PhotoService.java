@@ -9,8 +9,10 @@ import java.io.IOException;
 public abstract class PhotoService<T extends Photo> {
 
     protected final FilesUtil filesUtil;
+    private final Class<T> clazz;
 
-    protected PhotoService(FilesUtil filesUtil) {
+    protected PhotoService(FilesUtil filesUtil, Class<T> clazz) {
+        this.clazz = clazz;
         this.filesUtil = filesUtil;
     }
 
@@ -22,5 +24,9 @@ public abstract class PhotoService<T extends Photo> {
         photo = getPhotoRepository().save(photo);
         filesUtil.saveItemPhoto(photo, multipartFile);
         return photo;
+    }
+
+    public String getDirectory(){
+        return filesUtil.getObjectDirectory(clazz);
     }
 }

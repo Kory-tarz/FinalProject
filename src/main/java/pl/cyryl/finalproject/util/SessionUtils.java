@@ -20,4 +20,8 @@ public class SessionUtils {
     public static void saveCurrentOffer(HttpSession session, Offer currentOffer){
         session.setAttribute(OFFER_ATTRIBUTE, currentOffer);
     }
+
+    public static void clearOffer(HttpSession session) {
+        session.setAttribute(OFFER_ATTRIBUTE, null);
+    }
 }

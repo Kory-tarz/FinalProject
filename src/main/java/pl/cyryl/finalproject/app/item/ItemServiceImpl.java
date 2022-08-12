@@ -30,6 +30,7 @@ public class ItemServiceImpl implements ItemService{
 
     @Override
     public Optional<Item> findItem(long id) {
+        // TODO only active item?
         return itemRepository.findById(id);
     }
 

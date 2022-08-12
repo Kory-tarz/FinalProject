@@ -1,4 +1,4 @@
-package pl.cyryl.finalproject.app.offer;
+package pl.cyryl.finalproject.app.offer.status;
 
 
 import lombok.Getter;
@@ -17,6 +17,6 @@ public class Status {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String status;
+    private String name;
 
 }

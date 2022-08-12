@@ -17,7 +17,7 @@ public class ItemPhotoService extends PhotoService<ItemPhoto> {
     private final ItemPhotoRepository itemPhotoRepository;
 
     public ItemPhotoService(ItemPhotoRepository itemPhotoRepository, FilesUtil filesUtil) {
-        super(filesUtil);
+        super(filesUtil, ItemPhoto.class);
         this.itemPhotoRepository = itemPhotoRepository;
     }
 

@@ -23,7 +23,6 @@ import java.util.List;
 public class ItemController {
     private final ItemService itemService;
     private final CategoryRepository categoryRepository;
-    private final FilesUtil filesUtil;
     private final UserService userService;
     private final ItemPhotoService itemPhotoService;
 
@@ -32,10 +31,9 @@ public class ItemController {
     private final String CATEGORIES = "categories";
 
 
-    public ItemController(ItemService itemService, CategoryRepository categoryRepository, ItemPhotoRepository itemPhotoRepository, FilesUtil filesUtil, UserService userService, ItemPhotoService itemPhotoService) {
+    public ItemController(ItemService itemService, CategoryRepository categoryRepository, UserService userService, ItemPhotoService itemPhotoService) {
         this.itemService = itemService;
         this.categoryRepository = categoryRepository;
-        this.filesUtil = filesUtil;
         this.userService = userService;
         this.itemPhotoService = itemPhotoService;
     }
@@ -44,7 +42,7 @@ public class ItemController {
     public String createItemForm(Model model, HttpSession session) {
         long userId = (long) session.getAttribute("userId");
         Item item = new Item();
-        item.setOwner(userService.findById(userId).get());
+        item.setOwner(userService.findById(userId).orElseThrow());
         model.addAttribute(ITEM_ATTRIBUTE, item);
         model.addAttribute(CATEGORIES, categoryRepository.findAll());
         return "item/add";
@@ -81,6 +79,14 @@ public class ItemController {
         List<Item> items = itemService.findVisibleItemsFromUser(id);
         model.addAttribute(ITEM_LIST, items);
         return "item/list";
+    }
+
+    @GetMapping("details/{id}")
+    public String viewItemDetails(Model model, @PathVariable long id){
+        Item item = itemService.findItem(id).orElseThrow();
+        model.addAttribute(ITEM_ATTRIBUTE, item);
+        model.addAttribute("dirName", itemPhotoService.getDirectory());
+        return "item/details";
     }
 
     private void actionOnError(Model model, Item item){

@@ -3,7 +3,9 @@ package pl.cyryl.finalproject.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import pl.cyryl.finalproject.app.photo.ItemPhoto;
 import pl.cyryl.finalproject.app.photo.Photo;
+import pl.cyryl.finalproject.app.photo.ProfilePicture;
 
 import java.io.*;
 import java.nio.file.*;
@@ -15,6 +17,16 @@ public class FilesUtil {
     @Value("${app.user.profile-pictures.location}")
     private String profilePicturesLocation;
 
+
+    public <T extends Photo> String getObjectDirectory(Class<T> clazz){
+        if (ItemPhoto.class.getSimpleName().equals(clazz.getSimpleName())){
+            return getItemPhotosDirectory();
+        }
+        if(ProfilePicture.class.getSimpleName().equals(clazz.getSimpleName())){
+            return getProfilePicturesDirectory();
+        }
+        return "";
+    }
 
     public String getProfilePicturesDirectory(){
         return "/" + profilePicturesLocation + "/";
