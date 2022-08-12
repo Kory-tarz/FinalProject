@@ -10,15 +10,19 @@ public class StatusService {
         this.statusRepository = statusRepository;
     }
 
-    public Status getSubmittedStatus(){
+    public Status getSubmittedStatus() {
         return statusRepository.findByName("submitted");
     }
 
-    public Status getStatus(String statusName){
+    public Status getStatus(String statusName) {
         return statusRepository.findByName(statusName);
     }
 
-    public Status getAcceptedStatus(){
+    public Status getAcceptedStatus() {
         return statusRepository.findByName("accepted");
+    }
+
+    public Status getInactiveStatus() {
+        return statusRepository.findByName("inactive");
     }
 }

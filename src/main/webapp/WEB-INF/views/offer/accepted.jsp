@@ -1,16 +1,17 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: cyryl
-  Date: 12.08.2022
-  Time: 14:29
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Zaakceptowane oferty</title>
 </head>
 <body>
-
+<%@include file="pick_offer.jsp"%>
+<h2> Otrzymane oferty </h2>
+<ul>
+    <c:forEach items="${offers}" var="offer">
+        <li> Oferta od ${offer.submittingUser.username} na ${offer.submittedItems.size()} przedmiotów </li>
+        <p><a href="<c:url value="/offer/accepted_details/${offer.id}"/>"> Wyświetl szczegóły </a></p>
+    </c:forEach>
+</ul>
 </body>
 </html>

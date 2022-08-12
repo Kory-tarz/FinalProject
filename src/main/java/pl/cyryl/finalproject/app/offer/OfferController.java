@@ -43,6 +43,7 @@ public class OfferController {
         return "redirect:/offer/list/received";
     }
 
+
     @RequestMapping("/list/received")
     public String listReceivedOffers(HttpSession session, Model model){
         long userId = SessionUtils.getCurrentUserId(session);
@@ -50,13 +51,34 @@ public class OfferController {
         return "offer/received";
     }
 
+    @RequestMapping("/list/accepted")
+    public String listAcceptedOffers(HttpSession session, Model model){
+        long userId = SessionUtils.getCurrentUserId(session);
+        model.addAttribute(OFFERS_LIST, offerService.findAcceptedOffersByUser(userId));
+        return "offer/accepted";
+    }
+
+    @RequestMapping("/withdraw")
+    public String withdrawFromOffer(){
+        return "redirect:/offer/list/accepted";
+    }
+
     @GetMapping("details/{offerId}")
     public String showOfferDetails(HttpSession session, Model model, @PathVariable long offerId){
         long userId = SessionUtils.getCurrentUserId(session);
         Offer offer = offerService.findOfferBelongingToUser(offerId, userId).orElseThrow();
         //TODO should we be able to see offers between other people?
-        model.addAttribute(model.addAttribute(offer));
+        model.addAttribute(offer);
         return "offer/details";
+    }
+
+    @GetMapping("accepted_details/{offerId}")
+    public String showAcceptedOfferDetails(HttpSession session, Model model, @PathVariable long offerId){
+        long userId = SessionUtils.getCurrentUserId(session);
+        Offer offer = offerService.findOfferBelongingToUser(offerId, userId).orElseThrow();
+        //TODO should we be able to see offers between other people?
+        model.addAttribute(offer);
+        return "offer/accepted_details";
     }
 
     @PostMapping("/edit")
