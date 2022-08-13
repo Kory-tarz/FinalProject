@@ -3,9 +3,9 @@ package pl.cyryl.finalproject.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import pl.cyryl.finalproject.app.photo.ItemPhoto;
+import pl.cyryl.finalproject.app.photo.ItemPhoto.ItemPhoto;
 import pl.cyryl.finalproject.app.photo.Photo;
-import pl.cyryl.finalproject.app.photo.ProfilePicture;
+import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePicture;
 
 import java.io.*;
 import java.nio.file.*;

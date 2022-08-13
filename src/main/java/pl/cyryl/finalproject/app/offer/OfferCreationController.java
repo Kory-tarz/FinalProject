@@ -80,7 +80,7 @@ public class OfferCreationController {
     public String submitCurrentOffer(HttpSession session, Model model){
         Offer currentOffer = SessionUtils.getCurrentOffer(session);
         if(!offerService.isOfferValid(currentOffer)){
-            // TODO
+            // TODO decide what happens here
             model.addAttribute("error_msg", "invalid Offer");
             return "offer/show";
         }

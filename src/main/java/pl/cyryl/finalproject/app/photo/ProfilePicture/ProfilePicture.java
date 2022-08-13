@@ -1,7 +1,8 @@
-package pl.cyryl.finalproject.app.photo;
+package pl.cyryl.finalproject.app.photo.ProfilePicture;
 
 import lombok.Getter;
 import lombok.Setter;
+import pl.cyryl.finalproject.app.photo.Photo;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

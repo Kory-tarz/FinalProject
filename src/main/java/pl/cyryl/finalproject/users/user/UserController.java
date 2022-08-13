@@ -4,8 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pl.cyryl.finalproject.app.photo.ProfilePicture;
-import pl.cyryl.finalproject.app.photo.ProfilePictureRepository;
+import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePicture;
+import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePictureRepository;
+import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePictureService;
 import pl.cyryl.finalproject.users.user.exception.EmailAlreadyRegisteredException;
 import pl.cyryl.finalproject.util.FilesUtil;
 
@@ -19,20 +20,18 @@ public class UserController {
     private final UserService userService;
     private final String USER_ATTRIBUTE = "user";
     private final String PROFILE_PICTURES = "profile_pictures";
-    private final ProfilePictureRepository profilePictureRepository;
-    private final FilesUtil filesUtil;
+    private final ProfilePictureService profilePictureService;
 
-    public UserController(UserService userService, ProfilePictureRepository profilePictureRepository, FilesUtil filesUtil) {
+    public UserController(UserService userService, ProfilePictureService profilePictureService) {
         this.userService = userService;
-        this.profilePictureRepository = profilePictureRepository;
-        this.filesUtil = filesUtil;
+        this.profilePictureService = profilePictureService;
     }
 
     @GetMapping("/register")
     public String registerUser(Model model){
-        List<ProfilePicture> publicPictures = profilePictureRepository.findByPublicPictureTrue();
+        List<ProfilePicture> publicPictures = profilePictureService.findPublicProfilePictures();
         model.addAttribute(PROFILE_PICTURES, publicPictures);
-        model.addAttribute("pictureDir", filesUtil.getProfilePicturesDirectory());
+        model.addAttribute("pictureDir", profilePictureService.getDirectory());
         model.addAttribute(USER_ATTRIBUTE, new User());
         return "user/register";
     }
@@ -49,16 +48,21 @@ public class UserController {
             model.addAttribute("error_msg", e.getMessage());
             return "user/register";
         }
-
-
         return "redirect:show/" + user.getId();
     }
 
     @GetMapping("/show/{id}")
     public String showUser(Model model, @PathVariable long id){
-        User user = userService.findById(id).get();
+        User user = userService.findById(id).orElseThrow();
         model.addAttribute(USER_ATTRIBUTE, user);
         return "user/show";
     }
 
+    @GetMapping("/details/{id}")
+    public String userDetails(Model model, @PathVariable long id){
+        User user = userService.findById(id).orElseThrow();
+        model.addAttribute(USER_ATTRIBUTE, user);
+        model.addAttribute("dirName", profilePictureService.getDirectory());
+        return "user/details";
+    }
 }

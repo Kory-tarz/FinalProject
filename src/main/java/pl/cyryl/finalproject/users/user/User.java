@@ -4,11 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import pl.cyryl.finalproject.users.role.Role;
-import pl.cyryl.finalproject.app.photo.ProfilePicture;
+import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePicture;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Setter
@@ -37,4 +38,10 @@ public class User {
     private ProfilePicture profilePhotoFile;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Role> roles;
+    private LocalDate creationDate;
+
+    @PrePersist
+    private void onSave(){
+        creationDate = LocalDate.now();
+    }
 }

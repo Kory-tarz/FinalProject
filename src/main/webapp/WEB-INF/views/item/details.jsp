@@ -31,7 +31,7 @@
 </div>
 <c:if test="${sessionScope.userId == item.owner.id}">
     <div>
-        Tutaj link do edycji itemu
+        <p><a href="<c:url value="/item/edit/${item.id}"/>">Edytuj</a></p>
     </div>
 </c:if>
 <%@include file="item_actions.jsp"%>

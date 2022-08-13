@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import pl.cyryl.finalproject.app.photo.ItemPhoto;
-import pl.cyryl.finalproject.app.photo.ItemPhotoRepository;
-import pl.cyryl.finalproject.app.photo.ProfilePicture;
-import pl.cyryl.finalproject.app.photo.ProfilePictureRepository;
+import pl.cyryl.finalproject.app.photo.ItemPhoto.ItemPhoto;
+import pl.cyryl.finalproject.app.photo.ItemPhoto.ItemPhotoRepository;
+import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePicture;
+import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePictureRepository;
 import pl.cyryl.finalproject.util.FilesUtil;
 
 import javax.servlet.http.HttpSession;

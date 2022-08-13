@@ -1,21 +1,21 @@
 package pl.cyryl.finalproject.app.item;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.cyryl.finalproject.app.category.CategoryRepository;
-import pl.cyryl.finalproject.app.photo.ItemPhoto;
-import pl.cyryl.finalproject.app.photo.ItemPhotoRepository;
-import pl.cyryl.finalproject.app.photo.ItemPhotoService;
+import pl.cyryl.finalproject.app.photo.ItemPhoto.ItemPhoto;
+import pl.cyryl.finalproject.app.photo.ItemPhoto.ItemPhotoService;
 import pl.cyryl.finalproject.users.user.UserService;
-import pl.cyryl.finalproject.util.FilesUtil;
+import pl.cyryl.finalproject.util.SessionUtils;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RequestMapping("/item")
@@ -66,6 +66,41 @@ public class ItemController {
         return "redirect:/item/list";
     }
 
+    @GetMapping("/edit/{id}")
+    public String editItem(HttpSession session, Model model, @PathVariable long id){
+        Item item = itemService.findItem(id).orElseThrow();
+        long userId = SessionUtils.getCurrentUserId(session);
+        if(userId != item.getOwner().getId()){
+            //TODO throw exception e.g IllegalAccess
+        }
+        model.addAttribute(ITEM_ATTRIBUTE, item);
+        model.addAttribute(CATEGORIES, categoryRepository.findAll());
+        model.addAttribute("dirName", itemPhotoService.getDirectory());
+        return "item/edit";
+    }
+
+    @PostMapping("/edit")
+    public String saveEditedItem(Model model,
+            @Valid Item item,
+            BindingResult result,
+            @RequestParam(value = "images", required = false) MultipartFile[] multipartFiles){
+
+        if(result.hasErrors()){
+            actionOnError(model, item);
+            return "item/edit";
+        }
+        try {
+            List<ItemPhoto> photos = itemPhotoService.loadMultiplePhotos(multipartFiles);
+            item.getItemPhotos().addAll(photos);
+            itemService.save(item);
+        } catch (IOException e) {
+            model.addAttribute("error_msg", e.getMessage());
+            actionOnError(model, item);
+            return "item/edit";
+        }
+        return "redirect:/item/list";
+    }
+
     @RequestMapping("/list")
     public String listItems(HttpSession session, Model model) {
         long userId = (long) session.getAttribute("userId");
@@ -82,15 +117,26 @@ public class ItemController {
     }
 
     @GetMapping("details/{id}")
-    public String viewItemDetails(Model model, @PathVariable long id){
+    public String viewItemDetails(Model model, @PathVariable long id) {
         Item item = itemService.findItem(id).orElseThrow();
         model.addAttribute(ITEM_ATTRIBUTE, item);
         model.addAttribute("dirName", itemPhotoService.getDirectory());
         return "item/details";
     }
 
-    private void actionOnError(Model model, Item item){
+    @GetMapping("/search")
+    public String search(Model model,
+                         @RequestParam(value = "items_per_page", defaultValue = "10") int itemsPerPage,
+                         @RequestParam(value = "page_nr", defaultValue = "0") int pageNr) {
+        Page<Item> items = itemService.findAllActive(pageNr, itemsPerPage);
+        model.addAttribute(ITEM_LIST, items);
+        model.addAttribute("dirName", itemPhotoService.getDirectory());
+        return "item/search";
+    }
+
+    private void actionOnError(Model model, Item item) {
         model.addAttribute(ITEM_ATTRIBUTE, item);
         model.addAttribute(CATEGORIES, categoryRepository.findAll());
+        model.addAttribute("dirName", itemPhotoService.getDirectory());
     }
 }

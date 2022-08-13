@@ -9,6 +9,7 @@ public class SessionUtils {
     private static final String USER_ID = "userId";
     private static final String OFFER_ATTRIBUTE = "offer";
 
+    //TODO throw exception when null?
     public static long getCurrentUserId(HttpSession session){
         return (long)session.getAttribute(USER_ID);
     }

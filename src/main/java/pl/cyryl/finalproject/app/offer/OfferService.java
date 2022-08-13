@@ -37,36 +37,10 @@ public class OfferService {
         if(result.equals(OfferValidationResult.SUCCESS)){
             return true;
         } else {
+            System.out.println(result);
             // TODO log error
             return false;
         }
-
-//        long receivingId = offer.getReceivingUser().getId();
-//        long submittingId = offer.getSubmittingUser().getId();
-//
-//        // users have to be different
-//        if (receivingId == submittingId) {
-//            return false;
-//        }
-//        // both users must have items
-//        if (offer.getSubmittedItems().size() == 0 || offer.getOfferedItems().size() == 0) {
-//            return false;
-//        }
-//        // inactive item
-//        if (offer.getOfferedItems().stream().anyMatch(item -> !item.isActive())) {
-//            return false;
-//        }
-//        if (offer.getSubmittedItems().stream().anyMatch(item -> !item.isActive())) {
-//            return false;
-//        }
-//        // all items offered belong to receiving user
-//        if (!(offer.getOfferedItems().stream().allMatch(item -> item.getOwner().getId() == receivingId))) {
-//            return false;
-//        }
-//        // all items submitted belong to submitting user
-//        if (!(offer.getSubmittedItems().stream().allMatch(item -> item.getOwner().getId() == submittingId))) {
-//            return false;
-//        }
     }
 
     public Offer submitOffer(Offer offer) {

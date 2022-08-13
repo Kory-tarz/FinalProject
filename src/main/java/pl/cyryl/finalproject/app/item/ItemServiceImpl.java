@@ -1,5 +1,8 @@
 package pl.cyryl.finalproject.app.item;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,5 +40,16 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public Optional<Item> findPublicItem(long id){
         return itemRepository.findByIdAndActiveTrueAndPublicVisibilityTrue(id);
+    }
+
+    @Override
+    public List<Item> findAllActive() {
+        return itemRepository.findAllByActiveTrue();
+    }
+
+    @Override
+    public Page<Item> findAllActive(int pageNumber, int itemsPerPage){
+        Pageable pageable = PageRequest.of(pageNumber, itemsPerPage);
+        return itemRepository.findAllByActiveTrue(pageable);
     }
 }

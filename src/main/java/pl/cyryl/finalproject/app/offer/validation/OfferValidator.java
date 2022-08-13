@@ -11,7 +11,7 @@ public interface OfferValidator extends Function<Offer, OfferValidationResult> {
 
     static OfferValidator isBetweenDifferentUsers() {
         return offer -> offer.getSubmittingUser().getId() == offer.getReceivingUser().getId()
-                ? SUCCESS : THE_SAME_USERS;
+                ? THE_SAME_USERS : SUCCESS ;
     }
 
     static OfferValidator hasItems() {

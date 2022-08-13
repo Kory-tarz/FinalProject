@@ -4,7 +4,7 @@ package pl.cyryl.finalproject.app.item;
 import lombok.Getter;
 import lombok.Setter;
 import pl.cyryl.finalproject.app.category.Category;
-import pl.cyryl.finalproject.app.photo.ItemPhoto;
+import pl.cyryl.finalproject.app.photo.ItemPhoto.ItemPhoto;
 import pl.cyryl.finalproject.users.user.User;
 
 import javax.persistence.*;
@@ -26,9 +26,9 @@ public class Item {
     @NotEmpty
     private String description;
     private String expectations;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Category category;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private List<ItemPhoto> itemPhotos;
     @NotNull
     public boolean publicVisibility = true;
@@ -47,4 +47,9 @@ public class Item {
     public int hashCode() {
         return Long.valueOf(id).hashCode();
     }
+
+    public ItemPhoto getMainPhoto(){
+        return itemPhotos.get(0);
+    }
+
 }
