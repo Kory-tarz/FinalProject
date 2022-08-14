@@ -10,3 +10,7 @@
     <div><input type="submit" value="Sign In"/></div>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </form>
+<h3>Zaloguj się z</h3>
+<c:forEach items="${urls}" var="url">
+    <a href="${url.value}">${url.key}</a>
+</c:forEach>

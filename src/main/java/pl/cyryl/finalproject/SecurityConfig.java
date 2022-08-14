@@ -33,6 +33,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().logout().logoutSuccessUrl("/")
                 .permitAll()
                 .and().exceptionHandling().accessDeniedPage("/403");
-        //http.csrf().disable();
+
+        http.authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .oauth2Login();
     }
 }
