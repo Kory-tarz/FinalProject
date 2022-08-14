@@ -22,5 +22,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Page<Item> findAllByActiveTrue(Pageable pageable);
 
+    Page<Item> findAllByActiveTrueAndPublicVisibilityTrue(Pageable pageable);
+
     Page<Item> findAllByActiveTrueAndCategoryId(long categoryId, Pageable pageable);
+
+    Page<Item> findAllByActiveTrueAndPublicVisibilityTrueAndCategoryId(long categoryId, Pageable pageable);
 }

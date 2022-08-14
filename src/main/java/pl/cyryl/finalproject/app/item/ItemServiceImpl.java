@@ -66,9 +66,9 @@ public class ItemServiceImpl implements ItemService {
     public Page<Item> findAllActive(int pageNumber, int itemsPerPage, int categoryId, String columnToSortBy, boolean asc) {
         Pageable pageable = PageRequest.of(pageNumber, itemsPerPage, asc ? Sort.by(columnToSortBy) : Sort.by(columnToSortBy).descending());
         if (categoryId != 0) {
-            return itemRepository.findAllByActiveTrueAndCategoryId(categoryId, pageable);
+            return itemRepository.findAllByActiveTrueAndPublicVisibilityTrueAndCategoryId(categoryId, pageable);
         } else {
-            return itemRepository.findAllByActiveTrue(pageable);
+            return itemRepository.findAllByActiveTrueAndPublicVisibilityTrue(pageable);
         }
     }
 }

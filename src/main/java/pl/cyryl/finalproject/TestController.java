@@ -66,11 +66,6 @@ public class TestController {
         return "/admin";
     }
 
-    @GetMapping("/login")
-    public String login(){
-        return "login";
-    }
-
     @GetMapping("/add")
     public String addPhoto(){
         return "/add";
