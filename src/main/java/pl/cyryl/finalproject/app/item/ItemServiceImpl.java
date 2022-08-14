@@ -3,17 +3,21 @@ package pl.cyryl.finalproject.app.item;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import pl.cyryl.finalproject.util.EntityActivationService;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ItemServiceImpl implements ItemService{
+public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
+    private final EntityActivationService activationService;
 
-    public ItemServiceImpl(ItemRepository itemRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, EntityActivationService activationService) {
         this.itemRepository = itemRepository;
+        this.activationService = activationService;
     }
 
     @Override
@@ -32,13 +36,19 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
+    public void saveEdited(Item item) {
+        activationService.deactivateOffersWithItem(item);
+        save(item);
+    }
+
+    @Override
     public Optional<Item> findItem(long id) {
         // TODO only active item?
         return itemRepository.findById(id);
     }
 
     @Override
-    public Optional<Item> findPublicItem(long id){
+    public Optional<Item> findPublicItem(long id) {
         return itemRepository.findByIdAndActiveTrueAndPublicVisibilityTrue(id);
     }
 
@@ -48,8 +58,17 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
-    public Page<Item> findAllActive(int pageNumber, int itemsPerPage){
+    public Page<Item> findAllActive(int pageNumber, int itemsPerPage) {
         Pageable pageable = PageRequest.of(pageNumber, itemsPerPage);
         return itemRepository.findAllByActiveTrue(pageable);
+    }
+
+    public Page<Item> findAllActive(int pageNumber, int itemsPerPage, int categoryId, String columnToSortBy, boolean asc) {
+        Pageable pageable = PageRequest.of(pageNumber, itemsPerPage, asc ? Sort.by(columnToSortBy) : Sort.by(columnToSortBy).descending());
+        if (categoryId != 0) {
+            return itemRepository.findAllByActiveTrueAndCategoryId(categoryId, pageable);
+        } else {
+            return itemRepository.findAllByActiveTrue(pageable);
+        }
     }
 }

@@ -6,6 +6,10 @@
 </head>
 <body>
 <div>
+    <h2>Właściciel: ${item.owner.username}</h2>
+    <a href="<c:url value="/user/details/${item.owner.id}"/>">Zobacz profil</a>
+</div>
+<div>
     <h3>Zdjęcia</h3>
     <ul>
         <c:forEach items="${item.itemPhotos}" var="photo">
@@ -14,16 +18,13 @@
     </ul>
 </div>
 <div>
-    <label>Nazwa</label>
-    <div> ${item.name} </div>
+    <label>Nazwa: </label> ${item.name}
 </div>
 <div>
-    <label>Opis</label>
-    <div> ${item.description} </div>
+    <label>Opis: </label> ${item.description}
 </div>
 <div>
-    <label>Oczekiwania</label>
-    <div> ${item.expectations} </div>
+    <label>Oczekiwania: </label>${item.expectations}
 </div>
 <div>
     <label>Kategoria</label>

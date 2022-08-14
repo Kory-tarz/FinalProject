@@ -7,6 +7,7 @@
 </head>
 <body>
 <h2>Edytuj przedmiot</h2>
+<p><b style="color: red">Edytowanie przedmiotu spowoduje anulowanie wszystkich ofert w których on się znajduje</b></p>
 <c:if test="${error_msg != null}">
     <label style="color: red">${error_msg}</label>
 </c:if>

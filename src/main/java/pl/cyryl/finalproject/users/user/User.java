@@ -40,6 +40,8 @@ public class User {
     private Set<Role> roles;
     private LocalDate creationDate;
 
+    private boolean enabled = false;
+
     @PrePersist
     private void onSave(){
         creationDate = LocalDate.now();

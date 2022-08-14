@@ -31,7 +31,7 @@ public class EntityActivationService {
 
     private void deactivateItemSet(Set<Item> items, long offerId) {
         items.forEach(this::deactivateItem);
-        items.forEach(item -> deactivateDifferentOffersWithItem(item, offerId));
+        items.forEach(item -> deactivateOtherOffersWithItem(item, offerId));
     }
 
     private void deactivateItem(Item item) {
@@ -39,11 +39,15 @@ public class EntityActivationService {
         itemRepository.save(item);
     }
 
-    private void deactivateDifferentOffersWithItem(Item item, long offerId) {
+    private void deactivateOtherOffersWithItem(Item item, long offerId) {
         List<Offer> offers = offerRepository.findAllDifferentOffersWithItem(offerId, item);
         Status inactiveStatus = statusService.getInactiveStatus();
         offers.stream()
                 .peek(offer -> offer.setStatus(inactiveStatus))
                 .forEach(offerRepository::save);
+    }
+
+    public void deactivateOffersWithItem(Item item){
+        deactivateOtherOffersWithItem(item, 0);
     }
 }

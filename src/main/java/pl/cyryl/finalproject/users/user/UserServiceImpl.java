@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import pl.cyryl.finalproject.users.role.Role;
 import pl.cyryl.finalproject.users.role.RoleRepository;
 import pl.cyryl.finalproject.users.user.exception.EmailAlreadyRegisteredException;
+import pl.cyryl.finalproject.users.user.verification.VerificationToken;
+import pl.cyryl.finalproject.users.user.verification.VerificationTokenRepository;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -16,12 +18,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final VerificationTokenRepository tokenRepository;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                           BCryptPasswordEncoder passwordEncoder) {
+                           BCryptPasswordEncoder passwordEncoder, VerificationTokenRepository tokenRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -45,7 +49,29 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public void saveRegisteredUser(User user) {
+        userRepository.save(user);
+    }
+
+    @Override
+    public void createVerificationToken(User user, String token) {
+        VerificationToken verificationToken = new VerificationToken(user, token);
+        Optional<VerificationToken> oldToken = tokenRepository.findByUser(user);
+        oldToken.ifPresent(tokenRepository::delete);
+        tokenRepository.save(verificationToken);
+    }
+
+    @Override
+    public Optional<VerificationToken> getVerificationToken(String token) {
+        return tokenRepository.findByToken(token);
+    }
+
     private boolean emailExist(String email){
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    public Optional<User> findByEmail(String email){
+        return userRepository.findByEmail(email);
     }
 }

@@ -21,4 +21,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findAllByActiveTrue();
 
     Page<Item> findAllByActiveTrue(Pageable pageable);
+
+    Page<Item> findAllByActiveTrueAndCategoryId(long categoryId, Pageable pageable);
 }

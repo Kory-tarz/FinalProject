@@ -1,6 +1,8 @@
 package pl.cyryl.finalproject;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,10 @@ import pl.cyryl.finalproject.util.FilesUtil;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 
 @Controller
 public class TestController {
@@ -36,7 +42,7 @@ public class TestController {
     @GetMapping("/")
     @ResponseBody
     public String start(HttpSession session){
-        session.setAttribute("userId", 1L);
+        //session.setAttribute("userId", 1L);
         return loc;
     }
 
@@ -47,10 +53,17 @@ public class TestController {
         return loc;
     }
 
-    @GetMapping("/admin/")
+    @GetMapping("/admic")
     @ResponseBody
+    public String anotherUser(HttpSession session){
+        //session.setAttribute("userId", 4L);
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return "";
+    }
+
+    @GetMapping("/admin/ad")
     public String start2(){
-        return "all admin";
+        return "/admin";
     }
 
     @GetMapping("/login")

@@ -38,7 +38,7 @@
     </div>
     <div>
         <label>Password</label>
-        <form:input path="password"/>
+        <form:password path="password"/>
         <form:errors path="password"/>
     </div>
     <div>

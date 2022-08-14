@@ -10,12 +10,11 @@ import pl.cyryl.finalproject.app.category.CategoryRepository;
 import pl.cyryl.finalproject.app.photo.ItemPhoto.ItemPhoto;
 import pl.cyryl.finalproject.app.photo.ItemPhoto.ItemPhotoService;
 import pl.cyryl.finalproject.users.user.UserService;
-import pl.cyryl.finalproject.util.SessionUtils;
+import pl.cyryl.finalproject.util.SessionService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 @RequestMapping("/item")
@@ -25,17 +24,18 @@ public class ItemController {
     private final CategoryRepository categoryRepository;
     private final UserService userService;
     private final ItemPhotoService itemPhotoService;
+    private final SessionService sessionService;
 
     private final String ITEM_ATTRIBUTE = "item";
     private final String ITEM_LIST = "items";
     private final String CATEGORIES = "categories";
 
-
-    public ItemController(ItemService itemService, CategoryRepository categoryRepository, UserService userService, ItemPhotoService itemPhotoService) {
+    public ItemController(ItemService itemService, CategoryRepository categoryRepository, UserService userService, ItemPhotoService itemPhotoService, SessionService sessionService) {
         this.itemService = itemService;
         this.categoryRepository = categoryRepository;
         this.userService = userService;
         this.itemPhotoService = itemPhotoService;
+        this.sessionService = sessionService;
     }
 
     @GetMapping("/add")
@@ -69,7 +69,7 @@ public class ItemController {
     @GetMapping("/edit/{id}")
     public String editItem(HttpSession session, Model model, @PathVariable long id){
         Item item = itemService.findItem(id).orElseThrow();
-        long userId = SessionUtils.getCurrentUserId(session);
+        long userId = sessionService.getCurrentUserId(session);
         if(userId != item.getOwner().getId()){
             //TODO throw exception e.g IllegalAccess
         }
@@ -92,7 +92,7 @@ public class ItemController {
         try {
             List<ItemPhoto> photos = itemPhotoService.loadMultiplePhotos(multipartFiles);
             item.getItemPhotos().addAll(photos);
-            itemService.save(item);
+            itemService.saveEdited(item);
         } catch (IOException e) {
             model.addAttribute("error_msg", e.getMessage());
             actionOnError(model, item);
@@ -103,7 +103,7 @@ public class ItemController {
 
     @RequestMapping("/list")
     public String listItems(HttpSession session, Model model) {
-        long userId = (long) session.getAttribute("userId");
+        long userId = sessionService.getCurrentUserId(session);
         List<Item> activeItems = itemService.findItemsFromUser(userId);
         model.addAttribute(ITEM_LIST, activeItems);
         return "item/list";
@@ -127,11 +127,29 @@ public class ItemController {
     @GetMapping("/search")
     public String search(Model model,
                          @RequestParam(value = "items_per_page", defaultValue = "10") int itemsPerPage,
-                         @RequestParam(value = "page_nr", defaultValue = "0") int pageNr) {
-        Page<Item> items = itemService.findAllActive(pageNr, itemsPerPage);
+                         @RequestParam(value = "page_nr", defaultValue = "0") int pageNr,
+                         @RequestParam(value = "category", defaultValue = "0") int categoryId,
+                         @RequestParam(value = "sort", defaultValue = "id") String sortColumnName,
+                         @RequestParam(value = "asc", defaultValue = "true") boolean asc) {
+        Page<Item> items = itemService.findAllActive(pageNr, itemsPerPage, categoryId, sortColumnName, asc);
+        //TODO maybe catch(PropertyReferenceException)
         model.addAttribute(ITEM_LIST, items);
+        model.addAttribute(CATEGORIES, categoryRepository.findAll());
         model.addAttribute("dirName", itemPhotoService.getDirectory());
+        setSearchAttributes(model, categoryId, sortColumnName, asc);
         return "item/search";
+    }
+
+    private void setSearchAttributes(Model model, int categoryId, String sortColumnName, boolean asc){
+        model.addAttribute("category_id", categoryId);
+        model.addAttribute("sort", sortColumnName);
+        model.addAttribute("asc", asc);
+    }
+
+    private void setDefaultSearchAttributes(Model model){
+        model.addAttribute("category_id", 0);
+        model.addAttribute("sort", "id");
+        model.addAttribute("asc", true);
     }
 
     private void actionOnError(Model model, Item item) {
