@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-public class UserAuthenticationController {
+public class UserAuthController {
 
     private final UserService userService;
     private final ProfilePictureService profilePictureService;
@@ -38,7 +38,7 @@ public class UserAuthenticationController {
 
     Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
 
-    public UserAuthenticationController(UserService userService, ProfilePictureService profilePictureService, ApplicationEventPublisher eventPublisher, ClientRegistrationRepository clientRegistrationRepository) {
+    public UserAuthController(UserService userService, ProfilePictureService profilePictureService, ApplicationEventPublisher eventPublisher, ClientRegistrationRepository clientRegistrationRepository) {
         this.userService = userService;
         this.profilePictureService = profilePictureService;
         this.eventPublisher = eventPublisher;
@@ -99,7 +99,6 @@ public class UserAuthenticationController {
         if (type != ResolvableType.NONE && ClientRegistration.class.isAssignableFrom(type.resolveGenerics()[0])) {
             clientRegistrations = (Iterable<ClientRegistration>) clientRegistrationRepository;
         }
-        assert clientRegistrations != null;
         clientRegistrations.forEach(registration ->
                 oauth2AuthenticationUrls.put(registration.getClientName(),
                         authorizationRequestBaseUri + "/" + registration.getRegistrationId()));
@@ -107,10 +106,10 @@ public class UserAuthenticationController {
         return "/login";
     }
 
-    @GetMapping("/login")
-    @ExceptionHandler(UserNotFoundException.class)
-    public String userNotFound(Model model, Exception exception) {
-        model.addAttribute("error_msg", exception.getMessage());
-        return "/login";
-    }
+//    @GetMapping("/login")
+//    @ExceptionHandler(UserNotFoundException.class)
+//    public String userNotFound(Model model, Exception exception) {
+//        model.addAttribute("error_msg", exception.getMessage());
+//        return "/login";
+//    }
 }

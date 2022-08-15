@@ -25,4 +25,8 @@ public class StatusService {
     public Status getInactiveStatus() {
         return statusRepository.findByName("inactive");
     }
+
+    public Status getCanceledStatus() {
+        return statusRepository.findByName("canceled");
+    }
 }

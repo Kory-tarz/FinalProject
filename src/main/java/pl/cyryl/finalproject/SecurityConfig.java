@@ -1,17 +1,23 @@
 package pl.cyryl.finalproject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import pl.cyryl.finalproject.users.ExternalAuthSuccessHandler;
 import pl.cyryl.finalproject.users.details.SpringDataUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Bean
+    public ExternalAuthSuccessHandler externalAuthSuccessHandler(){
+        return new ExternalAuthSuccessHandler();
+    }
 
     @Bean
     public SpringDataUserDetailsService customUserDetailsService() {
@@ -30,13 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/item/**", "/offer/**")
                 .hasAnyRole("USER")
                 .and().formLogin().loginPage("/login")
+                .and().oauth2Login().loginPage("/login").successHandler(externalAuthSuccessHandler())
                 .and().logout().logoutSuccessUrl("/")
                 .permitAll()
                 .and().exceptionHandling().accessDeniedPage("/403");
-
-        http.authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
-                .oauth2Login();
     }
 }

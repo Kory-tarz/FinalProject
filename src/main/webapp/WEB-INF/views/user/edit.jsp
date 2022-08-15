@@ -6,20 +6,23 @@
     <title>Registration</title>
 </head>
 <body>
-<h1>Rejestracja</h1>
+<h1>Edytuj dane</h1>
 <div>
     <c:if test="${error_msg != null}">
         <label style="color: red">${error_msg}</label>
     </c:if>
 </div>
 <form:form modelAttribute="user">
+    <form:hidden path="email"/>
+    <form:hidden path="enabled"/>
+    <form:hidden path="password"/>
+    <form:hidden path="creationDate"/>
     <div>
         <label>Profile picture</label>
         <c:forEach items="${profile_pictures}" var="picture">
             <img src="${pictureDir}${picture.imagePath}" alt="${picture.path}" width="50" height="50"/>
-            <form:radiobutton path="profilePhotoFile" value="${picture}"/>
+            <form:radiobutton path="profilePhotoFile" checked="${picture.id == user.profilePhotoFile.id ? 'checked' : ''}" value="${picture}"/>
         </c:forEach>
-
     </div>
     <div>
         <label>Nazwa użytkownika</label>
@@ -37,23 +40,13 @@
         <form:errors path="lastName"/>
     </div>
     <div>
-        <label>Password</label>
-        <form:password path="password"/>
-        <form:errors path="password"/>
-    </div>
-    <div>
-        <label>Email</label>
-        <form:input path="email"/>
-        <form:errors path="email"/>
-    </div>
-    <div>
         <label>Adres</label>
         <form:input path="address"/>
         <form:errors path="address"/>
     </div>
     <div>
-        <label>About</label>
-        <form:input path="about"/>
+        <label>O sobie:</label>
+        <form:textarea path="about"/>
         <form:errors path="about"/>
     </div>
     <input type="submit" value="Potwierdź">

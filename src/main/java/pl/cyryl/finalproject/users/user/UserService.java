@@ -13,4 +13,5 @@ public interface UserService {
     void saveRegisteredUser(User user);
     void createVerificationToken(User user, String token);
     Optional<VerificationToken> getVerificationToken(String token);
+    void processOAuthLogin(User user);
 }

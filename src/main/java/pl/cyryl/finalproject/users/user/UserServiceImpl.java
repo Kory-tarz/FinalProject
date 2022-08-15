@@ -67,6 +67,19 @@ public class UserServiceImpl implements UserService {
         return tokenRepository.findByToken(token);
     }
 
+    @Override
+    public void processOAuthLogin(User user) {
+        Optional<User> userDbData = userRepository.findByEmail(user.getEmail());
+        if(userDbData.isEmpty()){
+            try {
+                registerNewUser(user);
+            } catch (EmailAlreadyRegisteredException e) {
+                System.out.println("should be impossible to get here");
+                // should be impossible to get here
+            }
+        }
+    }
+
     private boolean emailExist(String email){
         return userRepository.findByEmail(email).isPresent();
     }

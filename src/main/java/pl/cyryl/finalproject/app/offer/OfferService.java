@@ -34,7 +34,7 @@ public class OfferService {
                 .and(itemsBelongToReceivingUser());
 
         OfferValidationResult result = validator.apply(offer);
-        if(result.equals(OfferValidationResult.SUCCESS)){
+        if (result.equals(OfferValidationResult.SUCCESS)) {
             return true;
         } else {
             System.out.println(result);
@@ -47,7 +47,7 @@ public class OfferService {
         //TODO check what happens when items were change during operations on offer
         Status status = statusService.getSubmittedStatus();
         Optional<Offer> offerInDb = offerRepository.findById(offer.getId());
-        if(offerInDb.isPresent() && !offerInDb.get().getStatus().equals(status)){
+        if (offerInDb.isPresent() && !offerInDb.get().getStatus().equals(status)) {
             //We can only change offer if status equals 'submitted'
             //TODO throw exception or sth
         }
@@ -65,31 +65,42 @@ public class OfferService {
         return offerRepository.findAllByReceivingUserIdAndStatus(id, status);
     }
 
-    public List<Offer> findAcceptedOffersByUser(long id){
+    public List<Offer> findAcceptedOffersByUser(long id) {
         Status status = statusService.getAcceptedStatus();
         return offerRepository.findAllAcceptedOffers(id, status);
     }
 
-    public Optional<Offer> findOffer(long id){
+    public Optional<Offer> findOffer(long id) {
         return offerRepository.findById(id);
     }
 
-    public Optional<Offer> findOfferBelongingToUser(long offerId, long userId){
+    public Optional<Offer> findOfferBelongingToUser(long offerId, long userId) {
         Optional<Offer> offerOpt = offerRepository.findById(offerId);
-        if(offerOpt.isPresent()){
+        if (offerOpt.isPresent()) {
             Offer offer = offerOpt.get();
-            if(offer.getSubmittingUser().getId() == userId || offer.getReceivingUser().getId() == userId){
+            if (offer.getSubmittingUser().getId() == userId || offer.getReceivingUser().getId() == userId) {
                 return offerOpt;
             }
         }
         return Optional.empty();
     }
 
-    public void acceptOffer(Offer offer){
+    public void acceptOffer(Offer offer) {
         Status status = statusService.getAcceptedStatus();
         offer.setStatus(status);
         offer = offerRepository.save(offer);
         entityActivationService.deactivateOfferItems(offer);
+    }
+
+    public void withdrawOffer(long offerId) {
+        Offer offerInDb = offerRepository.findById(offerId).orElseThrow();
+        Status acceptedStatus = statusService.getAcceptedStatus();
+        if (offerInDb.getStatus().equals(acceptedStatus)) {
+            Status canceledStatus = statusService.getCanceledStatus();
+            offerInDb.setStatus(canceledStatus);
+            entityActivationService.activateItemsInOffer(offerInDb);
+            offerRepository.save(offerInDb);
+        }
     }
 
 }

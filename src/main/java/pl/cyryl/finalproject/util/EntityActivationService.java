@@ -40,14 +40,26 @@ public class EntityActivationService {
     }
 
     private void deactivateOtherOffersWithItem(Item item, long offerId) {
-        List<Offer> offers = offerRepository.findAllDifferentOffersWithItem(offerId, item);
+        Status submittedStatus = statusService.getSubmittedStatus();
+        List<Offer> offers = offerRepository.findAllDifferentOffersWithItemAndStatus(offerId, item, submittedStatus);
         Status inactiveStatus = statusService.getInactiveStatus();
         offers.stream()
                 .peek(offer -> offer.setStatus(inactiveStatus))
                 .forEach(offerRepository::save);
     }
 
-    public void deactivateOffersWithItem(Item item){
-        deactivateOtherOffersWithItem(item, 0);
+    public void deactivateOffersWithItem(Item item) {
+        int dummyOfferId = 0;
+        deactivateOtherOffersWithItem(item, dummyOfferId);
+    }
+
+    public void activateItemsInOffer(Offer offer) {
+        offer.getOfferedItems().forEach(this::activateItem);
+        offer.getSubmittedItems().forEach(this::activateItem);
+    }
+
+    private void activateItem(Item item) {
+        item.setActive(true);
+        itemRepository.save(item);
     }
 }

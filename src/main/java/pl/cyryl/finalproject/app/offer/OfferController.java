@@ -22,7 +22,6 @@ public class OfferController {
     private final SessionService sessionService;
 
     private final String OFFERS_LIST = "offers";
-    private final String OFFER_ATTRIBUTE = "offer";
 
     public OfferController(UserService userService, ItemService itemService, OfferService offerService, SessionService sessionService) {
         this.userService = userService;
@@ -59,7 +58,8 @@ public class OfferController {
     }
 
     @RequestMapping("/withdraw")
-    public String withdrawFromOffer(){
+    public String withdrawFromOffer(Offer offer){
+        offerService.withdrawOffer(offer.getId());
         return "redirect:/offer/list/accepted";
     }
 
@@ -102,4 +102,5 @@ public class OfferController {
         }
         return "redirect:/";
     }
+
 }

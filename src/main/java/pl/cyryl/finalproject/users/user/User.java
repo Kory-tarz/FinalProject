@@ -1,8 +1,10 @@
 package pl.cyryl.finalproject.users.user;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import pl.cyryl.finalproject.users.role.Role;
 import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePicture;
 
@@ -14,6 +16,7 @@ import java.util.Set;
 
 @Setter
 @Getter
+@NoArgsConstructor
 @Entity
 public class User {
     @Id
@@ -36,11 +39,19 @@ public class User {
     private String phoneNumber;
     @ManyToOne
     private ProfilePicture profilePhotoFile;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Role> roles;
     private LocalDate creationDate;
-
     private boolean enabled = false;
+
+    public User(OAuth2User oAuth2User){
+        this.firstName = oAuth2User.getAttribute("given_name");
+        this.lastName = oAuth2User.getAttribute("family_name");
+        this.email = oAuth2User.getAttribute("email");
+        this.username = oAuth2User.getAttribute("name");
+        this.password = Integer.toHexString(this.hashCode());
+        this.enabled = true;
+    }
 
     @PrePersist
     private void onSave(){
