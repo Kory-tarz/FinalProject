@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Registration</title>
+    <title>Edycja użytkownika</title>
 </head>
 <body>
 <h1>Edytuj dane</h1>
@@ -18,7 +18,7 @@
     <form:hidden path="password"/>
     <form:hidden path="creationDate"/>
     <div>
-        <label>Profile picture</label>
+        <label>Zdjęcie profilowe</label>
         <c:forEach items="${profile_pictures}" var="picture">
             <img src="${pictureDir}${picture.imagePath}" alt="${picture.path}" width="50" height="50"/>
             <form:radiobutton path="profilePhotoFile" checked="${picture.id == user.profilePhotoFile.id ? 'checked' : ''}" value="${picture}"/>

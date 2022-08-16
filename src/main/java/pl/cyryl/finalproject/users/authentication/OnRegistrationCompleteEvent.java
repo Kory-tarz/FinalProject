@@ -1,8 +1,9 @@
-package pl.cyryl.finalproject.users.user;
+package pl.cyryl.finalproject.users.authentication;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
+import pl.cyryl.finalproject.users.user.User;
 
 import java.util.Locale;
 

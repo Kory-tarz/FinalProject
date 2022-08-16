@@ -16,16 +16,13 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class OfferController {
 
-    private final UserService userService;
-    private final ItemService itemService;
     private final OfferService offerService;
     private final SessionService sessionService;
 
     private final String OFFERS_LIST = "offers";
+    private final String OFFER_ATTRIBUTE = "offer";
 
-    public OfferController(UserService userService, ItemService itemService, OfferService offerService, SessionService sessionService) {
-        this.userService = userService;
-        this.itemService = itemService;
+    public OfferController(OfferService offerService, SessionService sessionService) {
         this.offerService = offerService;
         this.sessionService = sessionService;
     }
@@ -103,6 +100,13 @@ public class OfferController {
             return "offer/accepted";
         }
         return "redirect:/";
+    }
+
+    @GetMapping("/history/{id}")
+    public String showOfferHistory(Model model, @PathVariable long id){
+        Offer offer = offerService.findOfferWithHistory(id);
+        model.addAttribute(OFFER_ATTRIBUTE, offer);
+        return "offer/history";
     }
 
 }

@@ -29,4 +29,8 @@ public class StatusService {
     public Status getCanceledStatus() {
         return statusRepository.findByName("canceled");
     }
+
+    public Status getHistoryStatus() {
+        return statusRepository.findByName("history");
+    }
 }

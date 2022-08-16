@@ -1,5 +1,6 @@
 package pl.cyryl.finalproject.app.offer;
 
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import pl.cyryl.finalproject.app.item.Item;
 import pl.cyryl.finalproject.app.item.ItemService;
@@ -64,14 +65,30 @@ public class OfferService {
         return items.stream().map(item -> itemService.findItem(item.getId()).orElseThrow()).collect(Collectors.toSet());
     }
 
-    public Offer submitOffer(Offer offer) {
-        Status status = statusService.getSubmittedStatus();
-        Optional<Offer> offerInDb = offerRepository.findById(offer.getId());
-        if (offerInDb.isPresent() && !offerInDb.get().getStatus().equals(status)) {
-            //We can only change offer if status equals 'submitted'
-            //TODO throw exception or sth
+    public void submitOffer(Offer offer) {
+        if (offer.isNew()) {
+            submitNewOffer(offer);
+        } else {
+            submitNextOfferVersion(offer);
+        }
+    }
+
+    private void submitNextOfferVersion(Offer offer) {
+        Offer prevOffer = offerRepository.findById(offer.getId()).orElseThrow();
+        if(!prevOffer.getStatus().equals(statusService.getSubmittedStatus())){
+            //TODO throw exception to catch? we can't edit this offer
             throw new RuntimeException("Impossible offer status");
         }
+        offer.resetId();
+        offer.setPreviousVersion(prevOffer);
+        offer = submitNewOffer(offer);
+        prevOffer.setNextVersion(offer);
+        prevOffer.setStatus(statusService.getHistoryStatus());
+        offerRepository.save(prevOffer);
+    }
+
+    private Offer submitNewOffer(Offer offer) {
+        Status status = statusService.getSubmittedStatus();
         offer.setStatus(status);
         return offerRepository.save(offer);
     }
@@ -124,4 +141,10 @@ public class OfferService {
         }
     }
 
+    public Offer findOfferWithHistory(long offerId){
+        Offer offer = offerRepository.findById(offerId).orElseThrow();
+        Hibernate.initialize(offer.getPreviousVersion());
+        Hibernate.initialize(offer.getNextVersion());
+        return offer;
+    }
 }

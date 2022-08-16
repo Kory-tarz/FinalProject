@@ -9,6 +9,7 @@ import pl.cyryl.finalproject.app.item.Item;
 import pl.cyryl.finalproject.app.offer.status.Status;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OfferRepository extends JpaRepository<Offer, Long> {

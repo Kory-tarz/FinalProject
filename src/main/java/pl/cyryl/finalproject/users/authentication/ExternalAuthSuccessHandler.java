@@ -22,7 +22,7 @@ public class ExternalAuthSuccessHandler implements AuthenticationSuccessHandler 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+        CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
         User user = userService.processOAuthLogin(new User(oauthUser));
         sessionService.saveUserId(request.getSession(), user.getId());
         response.sendRedirect("/item/search");

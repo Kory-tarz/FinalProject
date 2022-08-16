@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import pl.cyryl.finalproject.users.authentication.CustomOAuth2User;
 import pl.cyryl.finalproject.users.role.Role;
 import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePicture;
 
@@ -44,11 +45,11 @@ public class User {
     private LocalDate creationDate;
     private boolean enabled = false;
 
-    public User(OAuth2User oAuth2User){
-        this.firstName = oAuth2User.getAttribute("given_name");
-        this.lastName = oAuth2User.getAttribute("family_name");
-        this.email = oAuth2User.getAttribute("email");
-        this.username = oAuth2User.getAttribute("name");
+    public User(CustomOAuth2User oAuth2User){
+        this.firstName = oAuth2User.getFirstName();
+        this.lastName = oAuth2User.getLastName();
+        this.email = oAuth2User.getEmail();
+        this.username = oAuth2User.getUsername();
         this.password = Integer.toHexString(this.hashCode());
         this.enabled = true;
     }

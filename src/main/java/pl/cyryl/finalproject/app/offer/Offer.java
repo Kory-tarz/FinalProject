@@ -3,7 +3,6 @@ package pl.cyryl.finalproject.app.offer;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.BeanUtils;
 import pl.cyryl.finalproject.app.item.Item;
 import pl.cyryl.finalproject.app.offer.status.Status;
 import pl.cyryl.finalproject.app.transaction.TransactionType;
@@ -37,6 +36,10 @@ public class Offer {
     @ManyToOne
     @NotNull
     private Status status;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Offer nextVersion = null;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Offer previousVersion = null;
 
     @PrePersist
     private void onSave() {
@@ -60,5 +63,13 @@ public class Offer {
         User tempUser = receivingUser;
         receivingUser = submittingUser;
         submittingUser = tempUser;
+    }
+
+    public boolean isNew(){
+        return id == 0;
+    }
+
+    public void resetId(){
+        id = 0;
     }
 }
