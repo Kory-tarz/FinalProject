@@ -20,7 +20,7 @@ public interface OfferValidator extends Function<Offer, OfferValidationResult> {
                 ? USER_DOESNT_HAVE_ITEMS : SUCCESS;
     }
 
-    static OfferValidator hasInactiveItems() {
+    static OfferValidator hasActiveItems() {
         return offer -> (offer.getOfferedItems().stream().anyMatch(item -> !item.isActive()) ||
                 offer.getSubmittedItems().stream().anyMatch(item -> !item.isActive()))
                 ? INACTIVE_ITEM_IN_OFFER : SUCCESS;

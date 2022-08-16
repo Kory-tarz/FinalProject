@@ -86,7 +86,13 @@ public class OfferCreationController {
             model.addAttribute("error_msg", "invalid Offer");
             return "offer/show";
         }
-        currentOffer = offerService.submitOffer(currentOffer);
+        if(offerService.hasOfferChanged(currentOffer)){
+            currentOffer = offerService.refreshOffer(currentOffer);
+            sessionService.saveCurrentOffer(session, currentOffer);
+            model.addAttribute("error_msg", "Przedmioty w ofercie zostały edytowane");
+            return "offer/show";
+        }
+        offerService.submitOffer(currentOffer);
         sessionService.clearOffer(session);
         return "redirect:/offer/list/submitted";
     }

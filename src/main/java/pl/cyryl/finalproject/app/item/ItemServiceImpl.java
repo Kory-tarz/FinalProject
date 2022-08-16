@@ -71,4 +71,10 @@ public class ItemServiceImpl implements ItemService {
             return itemRepository.findAllByActiveTrueAndPublicVisibilityTrue(pageable);
         }
     }
+
+    @Override
+    public boolean hasItemChanged(Item item) {
+        Item itemInDatabase = itemRepository.findById(item.getId()).orElseThrow();
+        return !(item.getLastUpdated().equals(itemInDatabase.getLastUpdated()));
+    }
 }

@@ -10,6 +10,7 @@ import pl.cyryl.finalproject.users.user.User;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -34,6 +35,20 @@ public class Item {
     public boolean publicVisibility = true;
     @NotNull
     public boolean active = true;
+    private LocalDateTime lastUpdated;
+
+    @PrePersist
+    private void onSave(){
+        setUpdateTime();
+    }
+    @PreUpdate
+    private void onUpdate(){
+        setUpdateTime();
+    }
+
+    private void setUpdateTime(){
+        lastUpdated = LocalDateTime.now();
+    }
 
     @Override
     public boolean equals(Object obj) {

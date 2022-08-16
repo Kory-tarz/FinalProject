@@ -6,6 +6,9 @@
 </head>
 <body>
 <div>
+    <c:if test="${error_msg != null}">
+        <p style="color: red">${error_msg}</p>
+    </c:if>
     <h2>Moje przedmioty: </h2>
     <ul>
         <c:forEach items="${sessionScope.offer.submittedItems}" var="submittedItem">

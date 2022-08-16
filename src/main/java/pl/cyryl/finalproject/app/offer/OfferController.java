@@ -58,8 +58,12 @@ public class OfferController {
     }
 
     @RequestMapping("/withdraw")
-    public String withdrawFromOffer(Offer offer){
-        offerService.withdrawOffer(offer.getId());
+    public String withdrawFromOffer(HttpSession session, Offer offer){
+        long userId = sessionService.getCurrentUserId(session);
+        if(offer.getSubmittingUser().getId() == userId || offer.getReceivingUser().getId() == userId) {
+            offerService.withdrawOffer(offer.getId());
+        }
+        //TODO exception here?
         return "redirect:/offer/list/accepted";
     }
 
@@ -67,7 +71,6 @@ public class OfferController {
     public String showOfferDetails(HttpSession session, Model model, @PathVariable long offerId){
         long userId = sessionService.getCurrentUserId(session);
         Offer offer = offerService.findOfferBelongingToUser(offerId, userId).orElseThrow();
-        //TODO should we be able to see offers between other people?
         model.addAttribute(offer);
         return "offer/details";
     }
@@ -76,7 +79,6 @@ public class OfferController {
     public String showAcceptedOfferDetails(HttpSession session, Model model, @PathVariable long offerId){
         long userId = sessionService.getCurrentUserId(session);
         Offer offer = offerService.findOfferBelongingToUser(offerId, userId).orElseThrow();
-        //TODO should we be able to see offers between other people?
         model.addAttribute(offer);
         return "offer/accepted_details";
     }
@@ -89,8 +91,8 @@ public class OfferController {
 
     @PostMapping("/negotiate")
     public String negotiateOffer(HttpSession session, Offer offer){
-        Offer counterOffer = offer.createCounterOffer();
-        sessionService.saveCurrentOffer(session, counterOffer);
+        offer.setCounterOffer();
+        sessionService.saveCurrentOffer(session, offer);
         return "offer/show";
     }
 

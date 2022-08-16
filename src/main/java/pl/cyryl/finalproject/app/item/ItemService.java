@@ -15,4 +15,5 @@ public interface ItemService {
     List<Item> findAllActive();
     Page<Item> findAllActive(int pageNumber, int itemsPerPage);
     Page<Item> findAllActive(int pageNumber, int itemsPerPage, int categoryId, String columnToSortBy, boolean asc);
+    boolean hasItemChanged(Item item);
 }

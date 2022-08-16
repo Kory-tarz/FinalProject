@@ -45,6 +45,10 @@ public class SessionService {
         session.setAttribute(OFFER_ATTRIBUTE, null);
     }
 
+    public void saveUserId(HttpSession session, long userId) {
+        session.setAttribute(USER_ID, userId);
+    }
+
     private long getIdFromPrincipal() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> currentUser = Optional.empty();

@@ -23,7 +23,7 @@
         <select name="sort">
             <option value="id">---</option>
             <option value="name"> Nazwa</option>
-            <option value="date"> Data dodania</option>
+            <option value="lastUpdated"> Data modyfikacji</option>
         </select>
     </label>
     <select name="asc">

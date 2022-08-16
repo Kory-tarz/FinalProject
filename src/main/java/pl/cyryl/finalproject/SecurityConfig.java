@@ -1,13 +1,13 @@
 package pl.cyryl.finalproject;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import pl.cyryl.finalproject.users.ExternalAuthSuccessHandler;
+import pl.cyryl.finalproject.users.authentication.ExternalAuthSuccessHandler;
+import pl.cyryl.finalproject.users.authentication.RegularAuthSuccessHandler;
 import pl.cyryl.finalproject.users.details.SpringDataUserDetailsService;
 
 @Configuration
@@ -18,6 +18,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public ExternalAuthSuccessHandler externalAuthSuccessHandler(){
         return new ExternalAuthSuccessHandler();
     }
+
+    @Bean
+    public RegularAuthSuccessHandler regularAuthSuccessHandler() { return new RegularAuthSuccessHandler(); }
 
     @Bean
     public SpringDataUserDetailsService customUserDetailsService() {
@@ -35,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasAnyRole("USER", "ADMIN")
                 .antMatchers("/item/**", "/offer/**")
                 .hasAnyRole("USER")
-                .and().formLogin().loginPage("/login")
+                .and().formLogin().loginPage("/login").successHandler(regularAuthSuccessHandler())
                 .and().oauth2Login().loginPage("/login").successHandler(externalAuthSuccessHandler())
                 .and().logout().logoutSuccessUrl("/")
                 .permitAll()

@@ -1,6 +1,8 @@
 package pl.cyryl.finalproject.app.offer;
 
 import org.springframework.stereotype.Service;
+import pl.cyryl.finalproject.app.item.Item;
+import pl.cyryl.finalproject.app.item.ItemService;
 import pl.cyryl.finalproject.app.offer.status.Status;
 import pl.cyryl.finalproject.app.offer.status.StatusService;
 import pl.cyryl.finalproject.app.offer.validation.OfferValidationResult;
@@ -9,6 +11,8 @@ import pl.cyryl.finalproject.util.EntityActivationService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static pl.cyryl.finalproject.app.offer.validation.OfferValidator.*;
 
@@ -18,18 +22,20 @@ public class OfferService {
     private final OfferRepository offerRepository;
     private final StatusService statusService;
     private final EntityActivationService entityActivationService;
+    private final ItemService itemService;
 
-    public OfferService(OfferRepository offerRepository, StatusService statusService, EntityActivationService entityActivationService) {
+    public OfferService(OfferRepository offerRepository, StatusService statusService, EntityActivationService entityActivationService, ItemService itemService) {
         this.offerRepository = offerRepository;
         this.statusService = statusService;
         this.entityActivationService = entityActivationService;
+        this.itemService = itemService;
     }
 
     public boolean isOfferValid(Offer offer) {
 
         OfferValidator validator = isBetweenDifferentUsers()
                 .and(hasItems())
-                .and(hasInactiveItems())
+                .and(hasActiveItems())
                 .and(itemsBelongToSubmittingUser())
                 .and(itemsBelongToReceivingUser());
 
@@ -43,13 +49,28 @@ public class OfferService {
         }
     }
 
+    public boolean hasOfferChanged(Offer offer) {
+        return offer.getOfferedItems().stream().anyMatch(itemService::hasItemChanged)
+                || offer.getSubmittedItems().stream().anyMatch(itemService::hasItemChanged);
+    }
+
+    public Offer refreshOffer(Offer offer) {
+        offer.setSubmittedItems(getRefreshedItems(offer.getSubmittedItems()));
+        offer.setOfferedItems(getRefreshedItems(offer.getOfferedItems()));
+        return offer;
+    }
+
+    private Set<Item> getRefreshedItems(Set<Item> items) {
+        return items.stream().map(item -> itemService.findItem(item.getId()).orElseThrow()).collect(Collectors.toSet());
+    }
+
     public Offer submitOffer(Offer offer) {
-        //TODO check what happens when items were change during operations on offer
         Status status = statusService.getSubmittedStatus();
         Optional<Offer> offerInDb = offerRepository.findById(offer.getId());
         if (offerInDb.isPresent() && !offerInDb.get().getStatus().equals(status)) {
             //We can only change offer if status equals 'submitted'
             //TODO throw exception or sth
+            throw new RuntimeException("Impossible offer status");
         }
         offer.setStatus(status);
         return offerRepository.save(offer);

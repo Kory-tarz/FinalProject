@@ -39,14 +39,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void registerNewUser(User user) throws EmailAlreadyRegisteredException {
-        if(emailExist(user.getEmail())){
+    public User registerNewUser(User user) throws EmailAlreadyRegisteredException {
+        if (emailExist(user.getEmail())) {
             throw new EmailAlreadyRegisteredException("There is already an account with email address: " + user.getEmail());
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role userRole = roleRepository.findByName("ROLE_USER");
         user.setRoles(new HashSet<>(Arrays.asList(userRole)));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
@@ -68,23 +68,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void processOAuthLogin(User user) {
+    public User processOAuthLogin(User user) {
         Optional<User> userDbData = userRepository.findByEmail(user.getEmail());
-        if(userDbData.isEmpty()){
+        if (userDbData.isEmpty()) {
             try {
-                registerNewUser(user);
+                return registerNewUser(user);
             } catch (EmailAlreadyRegisteredException e) {
                 System.out.println("should be impossible to get here");
-                // should be impossible to get here
+                throw new RuntimeException("should be impossible to get here");
             }
+        } else {
+            return userDbData.get();
         }
     }
 
-    private boolean emailExist(String email){
+    private boolean emailExist(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    public Optional<User> findByEmail(String email){
+    public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 }

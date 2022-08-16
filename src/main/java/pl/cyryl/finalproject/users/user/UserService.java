@@ -9,9 +9,9 @@ public interface UserService {
     Optional<User> findByUserName(String name);
     Optional<User> findById(Long id);
     Optional<User> findByEmail(String email);
-    void registerNewUser(User user) throws EmailAlreadyRegisteredException;
+    User registerNewUser(User user) throws EmailAlreadyRegisteredException;
     void saveRegisteredUser(User user);
     void createVerificationToken(User user, String token);
     Optional<VerificationToken> getVerificationToken(String token);
-    void processOAuthLogin(User user);
+    User processOAuthLogin(User user);
 }

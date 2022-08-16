@@ -53,13 +53,12 @@ public class Offer {
         offeredItems = offeredItems.stream().filter(item -> item.getId() != id).collect(Collectors.toSet());
     }
 
-    public Offer createCounterOffer() {
-        Offer counterOffer = new Offer();
-        counterOffer.setId(this.getId());
-        counterOffer.setReceivingUser(this.getSubmittingUser());
-        counterOffer.setSubmittingUser(this.getReceivingUser());
-        counterOffer.setOfferedItems(new HashSet<>(this.getSubmittedItems()));
-        counterOffer.setSubmittedItems(new HashSet<>(this.getOfferedItems()));
-        return counterOffer;
+    public void setCounterOffer() {
+        Set<Item> tempItems = offeredItems;
+        offeredItems = submittedItems;
+        submittedItems = tempItems;
+        User tempUser = receivingUser;
+        receivingUser = submittingUser;
+        submittingUser = tempUser;
     }
 }

@@ -1,4 +1,4 @@
-package pl.cyryl.finalproject.users.user;
+package pl.cyryl.finalproject.users.authentication;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ResolvableType;
@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePicture;
 import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePictureService;
+import pl.cyryl.finalproject.users.user.OnRegistrationCompleteEvent;
+import pl.cyryl.finalproject.users.user.User;
+import pl.cyryl.finalproject.users.user.UserService;
 import pl.cyryl.finalproject.users.user.exception.EmailAlreadyRegisteredException;
 import pl.cyryl.finalproject.users.user.exception.UserNotFoundException;
 import pl.cyryl.finalproject.users.user.verification.VerificationToken;
