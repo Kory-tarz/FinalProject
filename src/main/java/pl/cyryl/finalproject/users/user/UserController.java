@@ -16,22 +16,16 @@ import java.util.function.BinaryOperator;
 public class UserController {
 
     private final UserService userService;
-    private final String USER_ATTRIBUTE = "user";
     private final ProfilePictureService profilePictureService;
     private final SessionService sessionService;
+
+    private final String USER_ATTRIBUTE = "user";
     private final String PROFILE_PICTURES = "profile_pictures";
 
     public UserController(UserService userService, ProfilePictureService profilePictureService, SessionService sessionService) {
         this.userService = userService;
         this.profilePictureService = profilePictureService;
         this.sessionService = sessionService;
-    }
-
-    @GetMapping("/show/{id}")
-    public String showUser(Model model, @PathVariable long id){
-        User user = userService.findById(id).orElseThrow();
-        model.addAttribute(USER_ATTRIBUTE, user);
-        return "user/show";
     }
 
     @GetMapping("/details/{id}")

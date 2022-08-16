@@ -22,7 +22,6 @@
             <p><a href="<c:url value="/item/details/${offeredItem.id}"/>"> Wyświetl szczegóły </a></p>
         </c:forEach>
     </ul>
-
     <c:if test="${sessionScope.userId == offer.submittingUser.id}">
         <div>
             <form:form modelAttribute="offer" action="/offer/edit/">
@@ -45,6 +44,7 @@
             </form:form>
         </div>
     </c:if>
+    <p><a href="<c:url value="/offer/history/${offer.id}"/>">Zobacz historię</a></p>
 </div>
 </body>
 </html>

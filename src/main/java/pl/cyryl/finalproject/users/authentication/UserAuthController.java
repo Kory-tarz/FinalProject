@@ -7,17 +7,14 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePicture;
 import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePictureService;
-import pl.cyryl.finalproject.users.user.OnRegistrationCompleteEvent;
 import pl.cyryl.finalproject.users.user.User;
 import pl.cyryl.finalproject.users.user.UserService;
 import pl.cyryl.finalproject.users.user.exception.EmailAlreadyRegisteredException;
-import pl.cyryl.finalproject.users.user.exception.UserNotFoundException;
 import pl.cyryl.finalproject.users.user.verification.VerificationToken;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,33 +45,36 @@ public class UserAuthController {
         this.clientRegistrationRepository = clientRegistrationRepository;
     }
 
-
     @GetMapping("/register")
     public String registerUser(Model model) {
-        List<ProfilePicture> publicPictures = profilePictureService.findPublicProfilePictures();
-        model.addAttribute(PROFILE_PICTURES, publicPictures);
-        model.addAttribute("pictureDir", profilePictureService.getDirectory());
-        model.addAttribute(USER_ATTRIBUTE, new User());
-        return "user/register";
+        setRegistrationData(model, new User());
+        return "/user/register";
     }
 
     @PostMapping("/register")
     public String addNewUser(Model model, HttpServletRequest request, @Valid User user, BindingResult result) {
         if (result.hasErrors()) {
-            model.addAttribute(USER_ATTRIBUTE, user);
-            return "user/register";
+            setRegistrationData(model, user);
+            return "/user/register";
         }
         try {
             userService.registerNewUser(user);
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getContextPath()));
         } catch (EmailAlreadyRegisteredException e) {
             model.addAttribute("error_msg", e.getMessage());
-            return "user/register";
+            setRegistrationData(model, user);
+            return "/user/register";
         }
-        return "redirect:/user/show/" + user.getId();
+        return "redirect:/login";
     }
 
-    @GetMapping("/registration/confirm")
+    private void setRegistrationData(Model model, User user){
+        model.addAttribute(PROFILE_PICTURES, profilePictureService.findPublicProfilePictures());
+        model.addAttribute("pictureDir", profilePictureService.getDirectory());
+        model.addAttribute(USER_ATTRIBUTE, user);
+    }
+
+    @GetMapping("/register/confirm")
     public String confirmRegistration(Model model, @RequestParam("token") String token) {
         Optional<VerificationToken> verificationToken = userService.getVerificationToken(token);
         if (verificationToken.isEmpty()) {
@@ -109,10 +109,4 @@ public class UserAuthController {
         return "/login";
     }
 
-//    @GetMapping("/login")
-//    @ExceptionHandler(UserNotFoundException.class)
-//    public String userNotFound(Model model, Exception exception) {
-//        model.addAttribute("error_msg", exception.getMessage());
-//        return "/login";
-//    }
 }

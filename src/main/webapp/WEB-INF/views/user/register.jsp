@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Registration</title>
+    <title>Rejestracja</title>
 </head>
 <body>
 <h1>Rejestracja</h1>
@@ -14,12 +14,11 @@
 </div>
 <form:form modelAttribute="user">
     <div>
-        <label>Profile picture</label>
+        <label>Zdjęcie profilowe</label>
         <c:forEach items="${profile_pictures}" var="picture">
             <img src="${pictureDir}${picture.imagePath}" alt="${picture.path}" width="50" height="50"/>
             <form:radiobutton path="profilePhotoFile" value="${picture}"/>
         </c:forEach>
-
     </div>
     <div>
         <label>Nazwa użytkownika</label>
@@ -52,7 +51,7 @@
         <form:errors path="address"/>
     </div>
     <div>
-        <label>About</label>
+        <label>O sobie</label>
         <form:input path="about"/>
         <form:errors path="about"/>
     </div>
