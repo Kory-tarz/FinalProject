@@ -55,6 +55,13 @@ public class UserController {
         return "redirect:/user/details/" + id;
     }
 
+    @GetMapping("/panel")
+    public String userPanel(Model model, HttpSession session){
+        long userId = sessionService.getCurrentUserId(session);
+        model.addAttribute(USER_ATTRIBUTE, userService.findById(userId).orElseThrow());
+        return "user/panel";
+    }
+
     private void setEditUserAttributes(Model model, User user){
         model.addAttribute(USER_ATTRIBUTE, user);
         model.addAttribute(PROFILE_PICTURES, profilePictureService.findPublicProfilePictures());

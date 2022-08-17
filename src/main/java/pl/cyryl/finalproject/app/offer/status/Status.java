@@ -18,6 +18,7 @@ public class Status {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+    private String status;
 
     @Override
     public boolean equals(Object obj) {

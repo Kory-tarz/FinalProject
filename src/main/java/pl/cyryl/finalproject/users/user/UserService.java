@@ -1,7 +1,7 @@
 package pl.cyryl.finalproject.users.user;
 
 import pl.cyryl.finalproject.users.user.exception.EmailAlreadyRegisteredException;
-import pl.cyryl.finalproject.users.user.verification.VerificationToken;
+import pl.cyryl.finalproject.users.authentication.verification.VerificationToken;
 
 import java.util.Optional;
 

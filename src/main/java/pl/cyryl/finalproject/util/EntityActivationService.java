@@ -9,7 +9,7 @@ import pl.cyryl.finalproject.app.offer.status.Status;
 import pl.cyryl.finalproject.app.offer.status.StatusService;
 
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class EntityActivationService {
@@ -25,14 +25,23 @@ public class EntityActivationService {
     }
 
     public void deactivateOfferItems(Offer offer) {
-        deactivateItemSet(offer.getOfferedItems(), offer.getId());
-        deactivateItemSet(offer.getSubmittedItems(), offer.getId());
+        List<Offer> offersToDeactivate = findAllOffersSharingItems(offer);
+        offer.getOfferedItems().forEach(this::deactivateItem);
+        offer.getSubmittedItems().forEach(this::deactivateItem);
+        deactivateOffers(offersToDeactivate, "msg");
     }
 
-    private void deactivateItemSet(Set<Item> items, long offerId) {
-        items.forEach(this::deactivateItem);
-        items.forEach(item -> deactivateOtherOffersWithItem(item, offerId));
+    public void deactivateOffers(List<Offer> offers, String message){
+        Status inactiveStatus = statusService.getInactiveStatus();
+        offers.stream()
+                .peek(offer -> offer.setStatus(inactiveStatus))
+                .forEach(offerRepository::save);
     }
+
+//    private void deactivateItemSet(Set<Item> items) {
+//        items.forEach(this::deactivateItem);
+//        items.forEach(item -> deactivateOtherOffersWithItem(item, 1L));
+//    }
 
     private void deactivateItem(Item item) {
         item.setActive(false);
@@ -42,10 +51,7 @@ public class EntityActivationService {
     private void deactivateOtherOffersWithItem(Item item, long offerId) {
         Status submittedStatus = statusService.getSubmittedStatus();
         List<Offer> offers = offerRepository.findAllDifferentOffersWithItemAndStatus(offerId, item, submittedStatus);
-        Status inactiveStatus = statusService.getInactiveStatus();
-        offers.stream()
-                .peek(offer -> offer.setStatus(inactiveStatus))
-                .forEach(offerRepository::save);
+        deactivateOffers(offers, "");
     }
 
     public void deactivateOffersWithItem(Item item) {
@@ -61,5 +67,12 @@ public class EntityActivationService {
     private void activateItem(Item item) {
         item.setActive(true);
         itemRepository.save(item);
+    }
+
+    public List<Offer> findAllOffersSharingItems(Offer offer){
+        List<Long> allIds = offer.getOfferedItems().stream().map(Item::getId).collect(Collectors.toList());
+        allIds.addAll(offer.getSubmittedItems().stream().map(Item::getId).collect(Collectors.toList()));
+        Status status = statusService.getSubmittedStatus();
+        return offerRepository.findAllOffersWithItems(allIds, offer.getId(), status.getId());
     }
 }

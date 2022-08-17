@@ -12,7 +12,7 @@ import pl.cyryl.finalproject.users.authentication.CustomOAuth2UserService;
 import pl.cyryl.finalproject.users.authentication.ExternalAuthSuccessHandler;
 import pl.cyryl.finalproject.users.authentication.RegularAuthSuccessHandler;
 import pl.cyryl.finalproject.users.details.SpringDataUserDetailsService;
-import pl.cyryl.finalproject.util.FilesUtil;
+import pl.cyryl.finalproject.util.FilesService;
 
 @Configuration
 @EnableWebSecurity
@@ -21,7 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomOAuth2UserService customOAuth2UserService;
     @Autowired
-    private FilesUtil filesUtil;
+    private FilesService filesService;
 
     @Bean
     public ExternalAuthSuccessHandler externalAuthSuccessHandler() {
@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", filesUtil.getProfilePicturesDirectory() + "**").permitAll()
+                .antMatchers("/", filesService.getProfilePicturesDirectory() + "**").permitAll()
                 .antMatchers("/register/**").anonymous()
                 .antMatchers("/admin/**")
                 .hasAnyRole("ADMIN")

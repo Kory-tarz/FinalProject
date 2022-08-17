@@ -5,4 +5,6 @@
 <form:hidden path="receivingUser"/>
 <form:hidden path="submittedItems"/>
 <form:hidden path="offeredItems"/>
-
+<form:hidden path="status"/>
+<form:hidden path="previousVersion"/>
+<form:hidden path="nextVersion"/>

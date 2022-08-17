@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.cyryl.finalproject.app.photo.PhotoRepository;
 import pl.cyryl.finalproject.app.photo.PhotoService;
-import pl.cyryl.finalproject.util.FilesUtil;
+import pl.cyryl.finalproject.util.FilesService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,8 +15,8 @@ public class ItemPhotoService extends PhotoService<ItemPhoto> {
 
     private final ItemPhotoRepository itemPhotoRepository;
 
-    public ItemPhotoService(ItemPhotoRepository itemPhotoRepository, FilesUtil filesUtil) {
-        super(filesUtil, ItemPhoto.class);
+    public ItemPhotoService(ItemPhotoRepository itemPhotoRepository, FilesService filesService) {
+        super(filesService, ItemPhoto.class);
         this.itemPhotoRepository = itemPhotoRepository;
     }
 
