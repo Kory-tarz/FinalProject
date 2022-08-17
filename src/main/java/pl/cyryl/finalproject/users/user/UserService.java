@@ -9,7 +9,7 @@ public interface UserService {
     Optional<User> findByUserName(String name);
     Optional<User> findById(Long id);
     Optional<User> findByEmail(String email);
-    User registerNewUser(User user) throws EmailAlreadyRegisteredException;
+    User processNewUserRegistration(User user) throws EmailAlreadyRegisteredException;
     void saveRegisteredUser(User user);
     void createVerificationToken(User user, String token);
     Optional<VerificationToken> getVerificationToken(String token);

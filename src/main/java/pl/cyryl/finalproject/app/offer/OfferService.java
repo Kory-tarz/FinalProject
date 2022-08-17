@@ -1,5 +1,6 @@
 package pl.cyryl.finalproject.app.offer;
 
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import pl.cyryl.finalproject.app.item.Item;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static pl.cyryl.finalproject.app.offer.validation.OfferValidator.*;
 
+@Log4j2
 @Service
 public class OfferService {
 
@@ -46,8 +48,7 @@ public class OfferService {
         if (result.equals(OfferValidationResult.SUCCESS)) {
             return true;
         } else {
-            System.out.println(result);
-            // TODO log error
+            log.error(result);
             return false;
         }
     }

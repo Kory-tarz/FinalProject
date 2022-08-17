@@ -8,10 +8,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import pl.cyryl.finalproject.users.authentication.CustomOAuth2UserService;
-import pl.cyryl.finalproject.users.authentication.ExternalAuthSuccessHandler;
-import pl.cyryl.finalproject.users.authentication.RegularAuthSuccessHandler;
-import pl.cyryl.finalproject.users.details.SpringDataUserDetailsService;
+import pl.cyryl.finalproject.users.authentication.userData.CustomOAuth2UserService;
+import pl.cyryl.finalproject.users.authentication.events.ExternalAuthSuccessHandler;
+import pl.cyryl.finalproject.users.authentication.events.RegularAuthSuccessHandler;
+import pl.cyryl.finalproject.users.authentication.userData.SpringDataUserDetailsService;
 import pl.cyryl.finalproject.util.FilesService;
 
 @Configuration

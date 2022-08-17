@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePictureService;
+import pl.cyryl.finalproject.users.authentication.events.OnRegistrationCompleteEvent;
 import pl.cyryl.finalproject.users.user.User;
 import pl.cyryl.finalproject.users.user.UserService;
 import pl.cyryl.finalproject.users.user.exception.EmailAlreadyRegisteredException;
@@ -56,7 +57,7 @@ public class UserAuthController {
             return "/user/register";
         }
         try {
-            userService.registerNewUser(user);
+            userService.processNewUserRegistration(user);
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getContextPath()));
         } catch (EmailAlreadyRegisteredException e) {
             model.addAttribute("error_msg", e.getMessage());

@@ -30,11 +30,16 @@
     <label>Kategoria</label>
     <div> ${item.category.name} </div>
 </div>
-<c:if test="${sessionScope.userId == item.owner.id}">
-    <div>
-        <p><a href="<c:url value="/item/edit/${item.id}"/>">Edytuj</a></p>
-    </div>
+<c:if test="${item.active}">
+    <c:if test="${sessionScope.userId == item.owner.id}">
+        <div>
+            <p><a href="<c:url value="/item/edit/${item.id}"/>">Edytuj</a></p>
+        </div>
+    </c:if>
+    <%@include file="item_actions.jsp"%>
 </c:if>
-<%@include file="item_actions.jsp"%>
+<c:if test="${!item.active}">
+    <p style="color: chocolate">PRZEDMIOT NIEAKTYWNY</p>
+</c:if>
 </body>
 </html>

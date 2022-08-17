@@ -1,4 +1,4 @@
-package pl.cyryl.finalproject.users.authentication;
+package pl.cyryl.finalproject.users.authentication.userData;
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

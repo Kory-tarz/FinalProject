@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import pl.cyryl.finalproject.users.authentication.CustomOAuth2User;
+import pl.cyryl.finalproject.users.authentication.userData.CustomOAuth2User;
 import pl.cyryl.finalproject.users.role.Role;
 import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePicture;
 
@@ -32,6 +31,7 @@ public class User {
     @NotEmpty
     private String lastName;
     @Email
+    @NotEmpty
     @Column(unique = true)
     private String email;
     private String address;
