@@ -3,8 +3,7 @@
 <html>
 <head>
     <title>Zaakceptowane oferty</title>
-</head>
-<body>
+    <%@include file="navbar.jsp"%>
 <%@include file="pick_offer.jsp"%>
 <h2> Zaakceptowane oferty </h2>
 <ul>

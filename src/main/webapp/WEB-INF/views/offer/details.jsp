@@ -4,8 +4,7 @@
 <html>
 <head>
     <title>Title</title>
-</head>
-<body>
+    <%@include file="navbar.jsp"%>
 <div>
     <h2> Przedmioty ${offer.submittingUser.username}: </h2>
     <ul>

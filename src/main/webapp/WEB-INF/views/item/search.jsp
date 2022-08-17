@@ -4,8 +4,7 @@
 <html>
 <head>
     <title>Wyszukiwanie przedmiotów</title>
-</head>
-<body>
+<%@include file="navbar.jsp"%>
 <form method="get" id="search-form">
     <input type="hidden" name="page_nr" value="0">
     <label>Liczba przedmiotów na stonę

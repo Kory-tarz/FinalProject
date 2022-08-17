@@ -4,8 +4,7 @@
 <html>
 <head>
     <title>Rejestracja</title>
-</head>
-<body>
+    <%@include file="navbar.jsp"%>
 <h1>Rejestracja</h1>
 <div>
     <c:if test="${error_msg != null}">

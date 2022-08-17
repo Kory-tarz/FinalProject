@@ -3,8 +3,7 @@
 <html>
 <head>
     <title>Profil użytkownika ${user.username}</title>
-</head>
-<body>
+    <%@include file="navbar.jsp"%>
 <div>
     <h2>Nazwa użytkownika: ${user.username}</h2>
 </div>

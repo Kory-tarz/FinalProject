@@ -3,8 +3,7 @@
 <html>
 <head>
     <title>Title</title>
-</head>
-<body>
+    <%@include file="navbar.jsp"%>
 <div>
     <h2>Właściciel: ${item.owner.username}</h2>
     <a href="<c:url value="/user/details/${item.owner.id}"/>">Zobacz profil</a>

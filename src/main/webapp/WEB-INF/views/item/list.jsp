@@ -3,8 +3,7 @@
 <html>
 <head>
     <title>Przedmioty</title>
-</head>
-<body>
+    <%@include file="navbar.jsp"%>
 <ul>
     <c:forEach items="${items}" var="item">
         <li>

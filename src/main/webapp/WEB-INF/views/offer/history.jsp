@@ -5,8 +5,7 @@
 <html>
 <head>
     <title>Historia</title>
-</head>
-<body>
+    <%@include file="navbar.jsp"%>
 <h1> Historia wymiany </h1>
 <div>
     <h2> Przedmioty ${offer.submittingUser.username}: </h2>

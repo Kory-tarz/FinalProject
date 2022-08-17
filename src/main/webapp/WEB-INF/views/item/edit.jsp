@@ -4,8 +4,7 @@
 <html>
 <head>
     <title>Edytuj przedmiot</title>
-</head>
-<body>
+    <%@include file="navbar.jsp"%>
 <h2>Edytuj przedmiot</h2>
 <p><b style="color: red">Edytowanie przedmiotu spowoduje anulowanie wszystkich ofert w których on się znajduje</b></p>
 <c:if test="${error_msg != null}">

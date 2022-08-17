@@ -4,8 +4,7 @@
 <html>
 <head>
     <title>Dodaj nowy przedmiot</title>
-</head>
-<body>
+    <%@include file="navbar.jsp"%>
 <h2>Dodaj nowy przedmiot</h2>
 <c:if test="${error_msg != null}">
     <label style="color: red">${error_msg}</label>

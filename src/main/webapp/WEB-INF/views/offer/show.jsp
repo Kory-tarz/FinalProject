@@ -3,9 +3,7 @@
 <html>
 <head>
     <title>Złóż ofertę</title>
-</head>
-<body>
-<div>
+    <%@include file="navbar.jsp"%>
     <c:if test="${error_msg != null}">
         <p style="color: red">${error_msg}</p>
     </c:if>
