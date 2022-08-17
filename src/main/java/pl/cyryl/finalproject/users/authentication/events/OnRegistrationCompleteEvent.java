@@ -1,4 +1,4 @@
-package pl.cyryl.finalproject.users.authentication;
+package pl.cyryl.finalproject.users.authentication.events;
 
 import lombok.Getter;
 import lombok.Setter;

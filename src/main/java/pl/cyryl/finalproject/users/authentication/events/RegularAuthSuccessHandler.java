@@ -1,4 +1,4 @@
-package pl.cyryl.finalproject.users.authentication;
+package pl.cyryl.finalproject.users.authentication.events;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

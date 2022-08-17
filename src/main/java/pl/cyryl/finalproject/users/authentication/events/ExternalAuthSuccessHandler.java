@@ -1,9 +1,9 @@
-package pl.cyryl.finalproject.users.authentication;
+package pl.cyryl.finalproject.users.authentication.events;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import pl.cyryl.finalproject.users.authentication.userData.CustomOAuth2User;
 import pl.cyryl.finalproject.users.user.User;
 import pl.cyryl.finalproject.users.user.UserService;
 import pl.cyryl.finalproject.util.SessionService;

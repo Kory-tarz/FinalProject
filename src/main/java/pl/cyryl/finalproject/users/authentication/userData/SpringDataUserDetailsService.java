@@ -1,4 +1,4 @@
-package pl.cyryl.finalproject.users.details;
+package pl.cyryl.finalproject.users.authentication.userData;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

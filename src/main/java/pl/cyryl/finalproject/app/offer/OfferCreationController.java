@@ -54,14 +54,13 @@ public class OfferCreationController {
         return "offer/show";
     }
 
-    @GetMapping("/add/{item_id}/{user_id}")
-    public String addHisItem(HttpSession session, @PathVariable long item_id, @PathVariable long user_id) {
+    @GetMapping("/add/{item_id}/{userId}")
+    public String addHisItem(HttpSession session, @PathVariable long item_id, @PathVariable long userId) {
         Item item = itemService.findPublicItem(item_id).orElseThrow();
         Offer offer = sessionService.getCurrentOffer(session);
         if (sessionService.getCurrentUserId(session) == item.getOwner().getId()
                 || offer == null
-                || offer.getReceivingUser().getId() != user_id) {
-            // you can't trade your own item or trade with multiple people
+                || offer.getReceivingUser().getId() != userId) {
             return "redirect:/";
         }
         offer.getOfferedItems().add(item);
@@ -70,10 +69,10 @@ public class OfferCreationController {
     }
 
     @RequestMapping("/show")
-    public String showCurrentOffer(HttpSession session){
+    public String showCurrentOffer(HttpSession session, Model model){
         Offer currentOffer = sessionService.getCurrentOffer(session);
         if(currentOffer == null){
-            return "redirect:/";
+            model.addAttribute("error_msg", "Nie masz aktywnej oferty");
         }
         return "offer/show";
     }
@@ -83,7 +82,7 @@ public class OfferCreationController {
         Offer currentOffer = sessionService.getCurrentOffer(session);
         if(!offerService.isOfferValid(currentOffer)){
             // TODO decide what happens here
-            model.addAttribute("error_msg", "invalid Offer");
+            model.addAttribute("error_msg", "Oferta jest nieprawidłowa");
             return "offer/show";
         }
         if(offerService.hasOfferChanged(currentOffer)){

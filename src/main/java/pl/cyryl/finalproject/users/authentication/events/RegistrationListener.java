@@ -1,10 +1,9 @@
-package pl.cyryl.finalproject.users.authentication;
+package pl.cyryl.finalproject.users.authentication.events;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
-import pl.cyryl.finalproject.users.authentication.OnRegistrationCompleteEvent;
 import pl.cyryl.finalproject.users.user.User;
 import pl.cyryl.finalproject.users.user.UserService;
 

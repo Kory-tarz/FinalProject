@@ -39,10 +39,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerNewUser(User user) throws EmailAlreadyRegisteredException {
+    public User processNewUserRegistration(User user) throws EmailAlreadyRegisteredException {
         if (emailExist(user.getEmail())) {
             throw new EmailAlreadyRegisteredException("There is already an account with email address: " + user.getEmail());
         }
+        return registerNewUser(user);
+    }
+
+    @Override
+    public User processOAuthLogin(User user) {
+        Optional<User> userDbData = userRepository.findByEmail(user.getEmail());
+        if (userDbData.isEmpty()) {
+            return registerNewUser(user);
+        } else {
+            return userDbData.get();
+        }
+    }
+
+    private User registerNewUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role userRole = roleRepository.findByName("ROLE_USER");
         user.setRoles(new HashSet<>(Arrays.asList(userRole)));
@@ -65,21 +79,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<VerificationToken> getVerificationToken(String token) {
         return tokenRepository.findByToken(token);
-    }
-
-    @Override
-    public User processOAuthLogin(User user) {
-        Optional<User> userDbData = userRepository.findByEmail(user.getEmail());
-        if (userDbData.isEmpty()) {
-            try {
-                return registerNewUser(user);
-            } catch (EmailAlreadyRegisteredException e) {
-                System.out.println("should be impossible to get here");
-                throw new RuntimeException("should be impossible to get here");
-            }
-        } else {
-            return userDbData.get();
-        }
     }
 
     private boolean emailExist(String email) {
