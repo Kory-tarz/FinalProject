@@ -1,4 +1,4 @@
-package pl.cyryl.finalproject.users.user.verification;
+package pl.cyryl.finalproject.users.authentication.verification;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

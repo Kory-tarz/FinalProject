@@ -10,7 +10,7 @@ import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePicture;
 import java.io.*;
 import java.nio.file.*;
 
-public class FilesUtil {
+public class FilesService {
 
     @Value("${app.user.item-images.location}")
     private String itemPhotosLocation;

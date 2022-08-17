@@ -21,4 +21,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return "redirect:/notfound";
     }
 
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public String unauthorizedAccess(UnauthorizedAccessException exception){
+        System.out.println(exception.getMessage());
+        return "redirect:/403";
+    }
+
 }

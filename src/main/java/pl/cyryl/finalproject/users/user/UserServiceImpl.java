@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import pl.cyryl.finalproject.users.role.Role;
 import pl.cyryl.finalproject.users.role.RoleRepository;
 import pl.cyryl.finalproject.users.user.exception.EmailAlreadyRegisteredException;
-import pl.cyryl.finalproject.users.user.verification.VerificationToken;
-import pl.cyryl.finalproject.users.user.verification.VerificationTokenRepository;
+import pl.cyryl.finalproject.users.authentication.verification.VerificationToken;
+import pl.cyryl.finalproject.users.authentication.verification.VerificationTokenRepository;
 
 import java.util.Arrays;
 import java.util.HashSet;

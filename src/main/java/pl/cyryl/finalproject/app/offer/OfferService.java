@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 import pl.cyryl.finalproject.app.item.Item;
 import pl.cyryl.finalproject.app.item.ItemService;
 import pl.cyryl.finalproject.app.offer.status.Status;
+import pl.cyryl.finalproject.app.offer.status.StatusData;
 import pl.cyryl.finalproject.app.offer.status.StatusService;
 import pl.cyryl.finalproject.app.offer.validation.OfferValidationResult;
 import pl.cyryl.finalproject.app.offer.validation.OfferValidator;
+import pl.cyryl.finalproject.exceptions.UnauthorizedAccessException;
 import pl.cyryl.finalproject.util.EntityActivationService;
 
 import java.util.List;
@@ -75,9 +77,8 @@ public class OfferService {
 
     private void submitNextOfferVersion(Offer offer) {
         Offer prevOffer = offerRepository.findById(offer.getId()).orElseThrow();
-        if(!prevOffer.getStatus().equals(statusService.getSubmittedStatus())){
-            //TODO throw exception to catch? we can't edit this offer
-            throw new RuntimeException("Impossible offer status");
+        if (!prevOffer.getStatus().equals(statusService.getSubmittedStatus())) {
+            throw new UnauthorizedAccessException("Attempt to modify offer with id: " + offer.getId());
         }
         offer.resetId();
         offer.setPreviousVersion(prevOffer);
@@ -104,8 +105,13 @@ public class OfferService {
     }
 
     public List<Offer> findAcceptedOffersByUser(long id) {
-        Status status = statusService.getAcceptedStatus();
-        return offerRepository.findAllAcceptedOffers(id, status);
+        List<Status> allAcceptedStatuses = statusService.getAllAcceptedStatuses();
+        return offerRepository.findAllByUserWithStatuses(id, allAcceptedStatuses);
+    }
+
+    public List<Offer> findCompletedOffersByUser(long id){
+        Status status = statusService.getCompletedStatus();
+        return offerRepository.findAllOffersWithStatus(id, status);
     }
 
     public Optional<Offer> findOffer(long id) {
@@ -141,10 +147,64 @@ public class OfferService {
         }
     }
 
-    public Offer findOfferWithHistory(long offerId){
+    public Offer findOfferWithHistory(long offerId) {
         Offer offer = offerRepository.findById(offerId).orElseThrow();
         Hibernate.initialize(offer.getPreviousVersion());
         Hibernate.initialize(offer.getNextVersion());
         return offer;
+    }
+
+    public void confirmReceivingItem(Offer offer, long userConfirming) {
+        Status acceptedStatus = statusService.getAcceptedStatus();
+        if (offer.getStatus().equals(acceptedStatus)) {
+            oneItemReceived(offer, userConfirming);
+        } else {
+            finalizeOffer(offer, userConfirming);
+        }
+    }
+
+    private void finalizeOffer(Offer offer, long userConfirming) {
+        Status currentStatus = offer.getStatus();
+        Status receivingUser = statusService.getConfirmedByReceivingUserStatus();
+        if (currentStatus.equals(receivingUser) && offer.getReceivingUser().getId() == userConfirming) {
+            // Somehow we received second confirmation from the seme user
+            return;
+        }
+        Status completedStatus = statusService.getCompletedStatus();
+        offer.setStatus(completedStatus);
+        offerRepository.save(offer);
+    }
+
+    private void oneItemReceived(Offer offer, long userConfirming) {
+        Status status;
+        if (userConfirming == offer.getReceivingUser().getId()) {
+            status = statusService.getConfirmedByReceivingUserStatus();
+        } else {
+            status = statusService.getConfirmedBySubmittingUserStatus();
+        }
+        offer.setStatus(status);
+        offerRepository.save(offer);
+    }
+
+    public StatusData getStatusDataFromOffer(Offer offer, long userId){
+        StatusData statusData = new StatusData();
+        if(offer.getSubmittingUser().getId() != userId && offer.getReceivingUser().getId() != userId){
+            statusData.setMyOffer(false);
+            return statusData;
+        }
+        Status offerStatus = offer.getStatus();
+        if(offerStatus.getName().equals(statusService.CONFIRMED_RECEIVING)){
+            statusData.setReceivedByMe(offer.getReceivingUser().getId() == userId);
+            statusData.setReceivedByOther(!statusData.isReceivedByMe());
+        }
+        if(offerStatus.getName().equals(statusService.CONFIRMED_SUBMITTING)){
+            statusData.setReceivedByMe(offer.getSubmittingUser().getId() == userId);
+            statusData.setReceivedByOther(!statusData.isReceivedByMe());
+        }
+        if(offerStatus.getName().equals(statusService.COMPLETED)){
+            statusData.setReceivedByMe(true);
+            statusData.setReceivedByOther(true);
+        }
+        return statusData;
     }
 }

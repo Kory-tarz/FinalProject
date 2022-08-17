@@ -25,6 +25,6 @@ public class ExternalAuthSuccessHandler implements AuthenticationSuccessHandler 
         CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
         User user = userService.processOAuthLogin(new User(oauthUser));
         sessionService.saveUserId(request.getSession(), user.getId());
-        response.sendRedirect("/item/search");
+        response.sendRedirect("/user/panel");
     }
 }

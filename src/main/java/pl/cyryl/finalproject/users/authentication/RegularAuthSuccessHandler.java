@@ -26,6 +26,6 @@ public class RegularAuthSuccessHandler implements AuthenticationSuccessHandler {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
         sessionService.saveUserId(request.getSession(), user.getId());
-        response.sendRedirect("/item/search");
+        response.sendRedirect("/user/panel");
     }
 }

@@ -1,4 +1,4 @@
-package pl.cyryl.finalproject.users.user.verification;
+package pl.cyryl.finalproject.users.authentication.verification;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

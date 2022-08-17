@@ -23,11 +23,31 @@
         </c:forEach>
     </ul>
 
-    <form:form modelAttribute="offer" action="/offer/withdraw/">
-        <%@include file="hidden_offer_attributes.jsp" %>
-        <button type="submit" style="color: red">Anuluj wymianę</button>
-    </form:form>
+    <c:if test="${status.myOffer}">
+        <c:if test="${!status.receivedByMe && !status.receivedByOther}">
+            <form:form modelAttribute="offer" action="/offer/withdraw/">
+                <%@include file="hidden_offer_attributes.jsp" %>
+                <button type="submit" style="color: red">Anuluj wymianę</button>
+            </form:form>
+        </c:if>
+        <c:if test="${!status.receivedByMe}">
+            <form:form modelAttribute="offer" action="/offer/transaction/confirmation/">
+                <%@include file="hidden_offer_attributes.jsp" %>
+                <button type="submit" style="color: blue">Potwierdź otrzymanie przedmiotów</button>
+            </form:form>
+        </c:if>
+        <c:if test="${status.receivedByMe}">
+            <p style="color: green">Potwierdziłeś otrzymanie przedmiotów</p>
+        </c:if>
+        <c:if test="${status.receivedByOther}">
+            <p style="color: green">Użytkownik potwierdził otrzymanie od Ciebie przedmiotów</p>
+        </c:if>
+        <c:if test="${!status.receivedByOther}">
+            <p style="color: blue">Oczekiwanie aż użytkownik potwierdzi otrzymanie przedmiotów</p>
+        </c:if>
+    </c:if>
 
+    <p><a href="<c:url value="/offer/history/${offer.id}"/>">Zobacz historię</a></p>
 </div>
 </body>
 </html>

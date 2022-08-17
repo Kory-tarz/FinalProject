@@ -13,6 +13,10 @@
     <form action="<c:url value="/offer/list/accepted"/>" method="get">
         <button type="submit">Zaakceptowane oferty</button>
     </form>
+
+    <form action="<c:url value="/offer/list/completed"/>" method="get">
+        <button type="submit">Zrealizowane wyminany</button>
+    </form>
 </div>
 
 
