@@ -81,7 +81,6 @@ public class OfferCreationController {
     public String submitCurrentOffer(HttpSession session, Model model){
         Offer currentOffer = sessionService.getCurrentOffer(session);
         if(!offerService.isOfferValid(currentOffer)){
-            // TODO decide what happens here
             model.addAttribute("error_msg", "Oferta jest nieprawidłowa");
             return "offer/show";
         }

@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import pl.cyryl.finalproject.app.photo.ProfilePicture.ProfilePictureService;
 import pl.cyryl.finalproject.util.SessionService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.function.BinaryOperator;
 
 @RequestMapping("/user")
@@ -19,8 +21,8 @@ public class UserController {
     private final ProfilePictureService profilePictureService;
     private final SessionService sessionService;
 
-    private final String USER_ATTRIBUTE = "user";
-    private final String PROFILE_PICTURES = "profile_pictures";
+    private static final String USER_ATTRIBUTE = "user";
+    private static final String PROFILE_PICTURES = "profile_pictures";
 
     public UserController(UserService userService, ProfilePictureService profilePictureService, SessionService sessionService) {
         this.userService = userService;
@@ -46,7 +48,7 @@ public class UserController {
     }
 
     @PostMapping("/edit/{id}")
-    public String saveChanges(Model model, @Valid User user, BindingResult result, @PathVariable long id){
+    public String saveChanges(HttpServletRequest request, Model model, @Valid User user, BindingResult result, @PathVariable long id){
         if (result.hasErrors()){
             setEditUserAttributes(model, user);
             return "user/edit";
